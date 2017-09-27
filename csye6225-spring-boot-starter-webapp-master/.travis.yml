@@ -11,4 +11,4 @@ script:
 notifications:
   email:
     recipients:
-      - t.parikh@northeastern.edu
+      - xu.shua@husky.neu.edu

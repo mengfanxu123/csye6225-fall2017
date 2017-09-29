@@ -5,10 +5,13 @@ jdk:
 sudo: false
 install: true
 
+before_script:
+ - chmod +x gradlew
+ 
 script:
   - ./gradlew war
 
 notifications:
   email:
     recipients:
-      - t.parikh@northeastern.edu
+      - xu.shua@husky.neu.edu

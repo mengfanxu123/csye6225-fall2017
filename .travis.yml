@@ -14,4 +14,4 @@ script:
 notifications:
   email:
     recipients:
-      - zhang.mengf@husky.neu.eduee
+      - zhang.mengf@husky.neu.edu

@@ -1,0 +1,14 @@
+{
+	"Comment": "create record set",
+	"Changes": [{
+		"Action":"UPSERT",
+		"ResourceRecordSet": {
+			"Name":"ec2.csye6225-fall2017-xushua.me",
+			"Type":"A",
+			"TTL":60,
+			"ResourceRecords": [{
+				"Value":"52.73.197.54"
+			}]
+		}
+	}]
+}

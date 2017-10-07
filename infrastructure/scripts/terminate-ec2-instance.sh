@@ -1,6 +1,20 @@
 #!/bin/bash
-instanceid=`jq -r '.Reservations[0].Instances[0].InstanceId' ec2Inst.json`&&
+
+i=0
+while [ $i -le 100 ] 
+do
+instanceid=`jq -r '.Reservations['$i'].Instances[0].InstanceId' ec2Inst.json`&&
+if [ "$instanceid" = "null" ]
+then
+break;
+else
+echo $instanceid
 aws ec2 terminate-instances --instance-ids $instanceid&&
+i=$((i+1))
+echo "$i"
+fi
+done
+
 sleep 120s&&
 #groupid=`jq -r '.Reservations[0].Instances[0].SecurityGroups[0].GroupId' ec2Inst.json`&&
 #echo $groupid

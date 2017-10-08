@@ -1,34 +1,18 @@
 #!/bin/bash
-aws cloudformation create-stack --stack-name myteststack --template-body file:///home/xss/cloudFormation.json&&
 
-sleep 60s&&
 
-aws ec2 describe-instances --filters "Name=image-id,Values = ami-cd0f5cb6" >cloudFormation-ec2Inst.json&&
-i=0
-while [ $i -le 100 ] 
-do
-ipa=`jq -r '.Reservations['$i'].Instances[0].PublicIpAddress' cloudFormation-ec2Inst.json`&&
-echo $ipa
-if [ "$ipa" = "null" ]
-then
-i=$((i+1))
-echo "$i"
-else
-#aws ec2 terminate-instances --instance-ids $instanceid&&
-break;
-fi
-done
-#ip=`jq -r '.Reservations[0].Instances[0].PublicIpAddress' ec2Inst.json`&&
-#echo $ip
-jq -r '.Resources.myDNSRecord2.Properties.ResourceRecords[0]="'$ipa'"' cloudFormation1.json >cloudFormation2.json&&
+VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[0].VpcId" --output text)&&
+echo $VPC_ID&&
 
-sleep 60s
+SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=$VPC_ID" --query "Subnets[0].SubnetId" --output text)&&
+echo $SUBNET_ID&&
 
-aws cloudformation update-stack --stack-name myteststack --template-body file:///home/xss/cloudFormation2.json
+HOSTEDZONE_ID=$(aws route53 list-hosted-zones --query "HostedZones[0].Id" --output text)&&
+echo $HOSTEDZONE_ID&&
+
+NAME=$(aws route53 list-hosted-zones --query "HostedZones[0].Name" --output text)&&
+echo $NAME&&
+
+aws cloudformation create-stack --stack-name myteststack --template-body file://./cloudFormation.json --parameters ParameterKey=ParamSubnetID,ParameterValue=$SUBNET_ID ParameterKey=ParamVpcID,ParameterValue=$VPC_ID ParameterKey=ParamHostedZoneID,ParameterValue=$HOSTEDZONE_ID ParameterKey=ParamRecordSetsName,ParameterValue=$NAME&&
+
 echo done
-#aws ec2 delete-security-group --group-name my-sg
-#aws ec2 delete-security-group --group-id
-#aws ec2 delete-key-pair --key-name MyKeyPair
-#aws ec2 terminate-instances --instance-ids 
-
-

@@ -3,7 +3,7 @@
 	"Changes": [{
 		"Action":"UPSERT",
 		"ResourceRecordSet": {
-			"Name":"ec2.csye6225-fall2017-xushua.me",
+			"Name":"ec2",
 			"Type":"A",
 			"TTL":60,
 			"ResourceRecords": [{

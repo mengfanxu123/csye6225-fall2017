@@ -28,8 +28,20 @@ fi
 done
 #ip=`jq -r '.Reservations[0].Instances[0].PublicIpAddress' ec2Inst.json`&&
 #echo $ip
-jq -r '.Changes[0].ResourceRecordSet.ResourceRecords[0].Value="'$ipa'"' jsonStr.json >test.json&&
-aws route53 change-resource-record-sets --hosted-zone-id ZTTVZT7GLW4L7 --change-batch file:///home/xss/test.json&&
+
+NAME=$(aws route53 list-hosted-zones --query "HostedZones[0].Name" --output text)&&
+echo $NAME&&
+
+NAMED=ec.${NAME}&&
+
+jq -r '.Changes[0].ResourceRecordSet.Name="'${NAMED}'"' jsonStr.json >test.json&&
+
+jq -r '.Changes[0].ResourceRecordSet.ResourceRecords[0].Value="'$ipa'"' test.json >test1.json&&
+
+HOSTEDZONE_ID=$(aws route53 list-hosted-zones --query "HostedZones[0].Id" --output text)&&
+echo $HOSTEDZONE_ID&&
+
+aws route53 change-resource-record-sets --hosted-zone-id ${HOSTEDZONE_ID} --change-batch file://./test1.json&&
 echo done
 #aws ec2 delete-security-group --group-name my-sg
 #aws ec2 delete-security-group --group-id

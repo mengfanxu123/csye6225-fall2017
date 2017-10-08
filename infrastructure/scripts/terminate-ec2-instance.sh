@@ -23,6 +23,7 @@ aws ec2 delete-security-group --group-name csye6225-fall2017-webapp&&
 #aws ec2 delete-key-pair --key-name MyKeyPair&&
 #sudo rm MyKeyPair.pem;
 rm test.json;
+rm test1.json;
 rm ec2Inst.json;
 aws ec2 describe-instances&&
 echo done

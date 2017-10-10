@@ -1,14 +1,7 @@
 language: java
 
-env:
-  -DB=mysql
 jdk:
   - oraclejdk8
-mysql:
-  database:csye6225
-  username:root
-  password:xss080607
-  encoding:utf8
 
 sudo: true
 install: true
@@ -17,9 +10,6 @@ before_script:
  - chmod +x gradlew
  
 script:
-
-  - cd/src/test/java/com/csye6225/demo/ 
-  - mvn DemoApplicationTests.java
   - ./gradlew war
 
 notifications:

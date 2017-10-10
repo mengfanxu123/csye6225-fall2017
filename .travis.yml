@@ -7,7 +7,7 @@ jdk:
 mysql:
   database:csye6225
   username:root
-  password:
+  password:xss080607
   encoding:utf8
 
 sudo: true

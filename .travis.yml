@@ -11,7 +11,7 @@ mysql:
   encoding:utf8
 
 sudo: true
-install: false
+install: true
 
 before_script:
  - chmod +x gradlew

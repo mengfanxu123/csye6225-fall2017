@@ -11,16 +11,17 @@ aws ec2 run-instances --image-id ami-cd0f5cb6 --count 1 --instance-type t2.micro
 
 sleep 60s&&
 
-aws ec2 describe-instances --filters "Name=image-id,Values = ami-cd0f5cb6" >ec2Inst.json&&
+#aws ec2 describe-instances --filters "Name=image-id,Values = ami-cd0f5cb6" >ec2Inst.json&&
 i=0
 while [ $i -le 100 ] 
 do
-ipa=`jq -r '.Reservations['$i'].Instances[0].PublicIpAddress' ec2Inst.json`&&
+ipa=`aws ec2 describe-instances --filters "Name=image-id,Values = ami-cd0f5cb6" | jq -r '.Reservations['$i'].Instances[0].PublicIpAddress'`&&
+#ipa=`jq -r '.Reservations['$i'].Instances[0].PublicIpAddress' ec2Inst.json`&&
 echo $ipa
 if [ "$ipa" = "null" ]
 then
 i=$((i+1))
-echo "$i"
+#echo "$i"
 else
 #aws ec2 terminate-instances --instance-ids $instanceid&&
 break;

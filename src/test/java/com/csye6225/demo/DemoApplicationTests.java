@@ -7,19 +7,30 @@ package com.csye6225.demo;
  */
 
 
-import org.junit.Ignore;
+import com.csye6225.demo.pojo.User;
+import com.csye6225.demo.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DemoApplicationTests {
 
-  @Ignore
-  @Test
-  public void contextLoads() {
+    @Autowired
+    UserRepository userRepository;
+    @Test
+    public void showAll() {
+
+        List<User> userList=(List<User>)userRepository.findAll();
+        for (User u:userList) {
+            System.out.println(u.getEmail());
+        }
+
   }
 
 }

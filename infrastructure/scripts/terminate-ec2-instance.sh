@@ -3,7 +3,8 @@
 i=0
 while [ $i -le 100 ] 
 do
-instanceid=`jq -r '.Reservations['$i'].Instances[0].InstanceId' ec2Inst.json`&&
+instanceid=`aws ec2 describe-instances --filters "Name=image-id,Values = ami-cd0f5cb6" | jq -r '.Reservations['$i'].Instances[0].InstanceId'`&&
+#instanceid=`jq -r '.Reservations['$i'].Instances[0].InstanceId' ec2Inst.json`&&
 if [ "$instanceid" = "null" ]
 then
 break;
@@ -24,6 +25,6 @@ aws ec2 delete-security-group --group-name csye6225-fall2017-webapp&&
 #sudo rm MyKeyPair.pem;
 rm test.json;
 rm test1.json;
-rm ec2Inst.json;
+#rm ec2Inst.json;
 aws ec2 describe-instances&&
 echo done

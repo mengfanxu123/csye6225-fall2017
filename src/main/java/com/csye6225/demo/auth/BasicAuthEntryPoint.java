@@ -9,7 +9,9 @@ package com.csye6225.demo.auth;
 
 import com.google.gson.JsonObject;
 import org.apache.http.entity.ContentType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,7 @@ public class BasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     PrintWriter writer =response.getWriter();
     writer.println("HTTP Status 401 - " + authEx.getMessage());
+
   }
 
   @Override

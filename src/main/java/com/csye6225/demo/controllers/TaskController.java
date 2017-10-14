@@ -2,9 +2,15 @@ package com.csye6225.demo.controllers;
 
 
 import com.csye6225.demo.pojo.Task;
-import com.csye6225.demo.repository.TaskRepository;
+import com.csye6225.demo.repository.*;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.csye6225.demo.pojo.User;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -13,10 +19,12 @@ public class TaskController {
 
     @Autowired
     private TaskRepository taskRepository;
+    private UserRepository userRepository;
 
 
     @GetMapping("/{id}")
     public  @ResponseBody String detailTask(@PathVariable(name="id")String id){
+
 
         Task task=taskRepository.findOne(id);
         return task.getId();
@@ -28,7 +36,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public @ResponseBody String addTask(@RequestBody Task task){
+    public @ResponseBody String addTask(@RequestBody Task task,HttpServletResponse response){
         taskRepository.save(task);
         return task.getId();
     }

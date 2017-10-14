@@ -11,17 +11,7 @@
             "VpcId":{"Ref":"ParamVpcID"}
                           }
                          },
-        "RDSSG": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-            "GroupDescription": "Sample RDS security group",
-            "GroupName":"csye6225-rds",
-            "VpcId":{"Ref":"ParamVpcID"}
-                           }
-                 },
-        "RDS2SG":{
-           
-        },
+
        "EC2InstanceSGInboundRule1": {
            "Type": "AWS::EC2::SecurityGroupIngress",
            "Properties":{
@@ -103,7 +93,24 @@
     "PubliclyAccessible" : "false",
     "DBName":"csye6225"
   }
-}
+},
+"RDSSG":{
+    "Type" : "AWS::RDS::DBSecurityGroup",
+    "Properties" :
+    {
+        "EC2VpcId" : { "Ref" : "ParamVpcID" },
+        "DBSecurityGroupIngress": { "EC2SecurityGroupId": { "Fn::GetAtt" : [ "EC2InstanceSG", "GroupId" ] } },
+        "GroupDescription" : "Sample RDS security group",
+        "GroupName":"csye6225-rds"
+    }
+    },
+    
+    "MyS3Bucket" : {
+          "Type" : "AWS::S3::Bucket",
+          "Properties" : {
+            "BucketName" : "csye6225-fall2017-zhangmengf.me.csye6225.com"
+          }
+          }
     
    },
     "Parameters" : {

@@ -1,0 +1,92 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
+    "Resources": {
+        "EC2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": "ami-cd0f5cb6",
+                "InstanceType": "t2.micro",
+                "SecurityGroupIds": [
+                    {
+                        "Fn::GetAtt": [
+                            "WebServerSecurityGroup",
+                            "GroupId"
+                        ]
+                    }
+                ],
+                "KeyName": "MyKeyPair",
+                "SubnetId":{"Ref":"ParamSubnetID"}
+            }
+        },
+      
+"myDNSRecord2" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Properties" : {
+                "HostedZoneId" : {"Ref":"ParamHostedZoneID"},
+                "Name" :{"Ref":"ParamRecordSetsName"},
+                "Type" : "A",
+                "TTL" : "60",
+                "ResourceRecords" : [
+                    {"Fn::GetAtt": ["EC2Instance","PublicIp"]}
+                ]
+            }
+        },      
+
+        "WebServerSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupName":"csye6225-fall2017-myteststack-webapp",
+                "GroupDescription": "Enable HTTP access via port 80, SSH access via port 22, HTTPS access via port 443",
+                "VpcId":{"Ref":"ParamVpcID"},
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            }
+        }
+    },
+     "Parameters" : {
+
+       "ParamVpcID" : {
+
+            "Type" : "String"
+
+       },
+
+       "ParamSubnetID" : {
+
+            "Type" : "String"
+
+       },
+
+       "ParamHostedZoneID" : {
+
+            "Type" : "String"
+
+       },
+
+       "ParamRecordSetsName" : {
+
+            "Type" : "String"
+
+       }
+
+   }
+}

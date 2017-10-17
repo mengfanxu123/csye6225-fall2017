@@ -2,6 +2,7 @@ package com.csye6225.demo.pojo;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class Task {
     private String description;
 
     @OneToMany(cascade = {CascadeType.ALL},fetch =FetchType.LAZY,mappedBy = "task")
+    @JsonManagedReference
     private Set<File> file;
 
 

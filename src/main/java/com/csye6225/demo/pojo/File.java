@@ -1,5 +1,6 @@
 package com.csye6225.demo.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,7 +16,9 @@ public class File {
 
     @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn(name = "task_id")
+    @JsonBackReference
     private Task task;
+
     public File(){}
 
     public String getId() {

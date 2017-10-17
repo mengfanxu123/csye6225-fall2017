@@ -1,7 +1,7 @@
 package com.csye6225.demo.repository;
 
-import com.csye6225.demo.pojo.Task;
+import com.csye6225.demo.pojo.File;
 import org.springframework.data.repository.CrudRepository;
 
-public interface FileRpository extends CrudRepository<Task,String> {
+public interface FileRpository extends CrudRepository<File,String> {
 }

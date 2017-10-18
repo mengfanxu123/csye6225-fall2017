@@ -47,7 +47,6 @@ public class UserController {
             BCryptPasswordEncoderBean bCryptPasswordEncoder=new BCryptPasswordEncoderBean();
 
             String passwordSafe= bCryptPasswordEncoder.bCryptPasswordEncoder().encode(user.getPassword());
-            System.out.print(passwordSafe);
             newuser.setEmail(user.getEmail());
             newuser.setPassword(passwordSafe);
             userRepository.save(newuser);
@@ -56,7 +55,7 @@ public class UserController {
 
     }
 
-    @GetMapping(path = "/all/{id}")
+    @GetMapping(path = "/{id}")
     public @ResponseBody User getAccount(@PathVariable(name = "id") Long id){
         User user=userRepository.findOne(id);
         return user;

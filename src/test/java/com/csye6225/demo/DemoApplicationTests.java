@@ -25,7 +25,5 @@ public class DemoApplicationTests {
         assertEquals(11,11);
   }
 
-  @Test
-    public void show(){assertEquals(12,11);}
 
 }

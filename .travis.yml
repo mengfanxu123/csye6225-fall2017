@@ -11,6 +11,7 @@ before_script:
  
 script:
   - ./gradlew war
+  - gradle -Dtest.single=DemoApplicationTests test
 
 notifications:
   email:

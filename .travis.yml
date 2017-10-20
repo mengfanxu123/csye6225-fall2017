@@ -8,7 +8,7 @@ install: true
 
 before_script:
  - chmod +x gradlew
- - chmod +x ./src/test/java/com/csye6225/Demo/DemoApplicationTests.java
+ - chmod +x src/test/java/com/csye6225/Demo/DemoApplicationTests.java
 script:
   - ./gradlew war
   - ./src/test/java/com/csye6225/Demo/DemoApplicationTests.java

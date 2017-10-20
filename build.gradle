@@ -38,7 +38,7 @@ idea {
 sourceSets{
     test{
         java{
-           srcDir 'com.csye6225.demo'
+           srcDirs =['src/test/java']
        }
     }
 }

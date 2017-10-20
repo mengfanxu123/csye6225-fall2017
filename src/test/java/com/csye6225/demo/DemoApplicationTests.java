@@ -23,7 +23,6 @@ public class DemoApplicationTests {
 
 
     @Test
-   //@Sql({"/test-schema.sql", "/test-user-data.sql"})
     public void showAll() {
         System.out.println("Hello world");
   }

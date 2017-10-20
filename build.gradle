@@ -35,11 +35,9 @@ idea {
     }
 }
 
-sourceSets{
-    test{
-        java{
-           srcDir 'com/csye6225/demo'
-       }
+test{
+    testLogging{
+        events 'started','passed'
     }
 }
 
@@ -73,7 +71,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
 
-    testCompile('junit:junit:4.11')
+    testCompile('junit:junit')
 }
 
 war {

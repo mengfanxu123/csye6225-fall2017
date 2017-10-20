@@ -15,8 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.assertEquals;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+import static org.junit.Assert.assertEquals;
+
 
 public class DemoApplicationTests {
 
@@ -25,5 +25,6 @@ public class DemoApplicationTests {
     public void showAll() {
         assertEquals(11,11);
   }
+
 
 }

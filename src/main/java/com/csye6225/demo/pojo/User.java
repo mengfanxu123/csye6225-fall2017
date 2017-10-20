@@ -7,12 +7,11 @@ package com.csye6225.demo.pojo;
  *  YeHui Rong       001957596 rong.ye@husky.neu.edu
  */
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -22,6 +21,10 @@ public class User {
     private long id;
     private String email;
     private String password;
+
+    @OneToMany(cascade = {CascadeType.ALL},fetch =FetchType.LAZY,mappedBy = "user")
+    @JsonManagedReference
+    private Set<Task> task;
 
     public User(){
 
@@ -47,5 +50,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Task> getTask() {
+        return task;
+    }
+
+    public void setTask(Set<Task> task) {
+        this.task = task;
     }
 }

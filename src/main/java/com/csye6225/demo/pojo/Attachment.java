@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-public class File {
+public class Attachment {
 
     @Id
     @GeneratedValue(generator = "uuid",strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class File {
     @JsonBackReference
     private Task task;
 
-    public File(){}
+    public Attachment(){}
 
     public String getId() {
         return id;

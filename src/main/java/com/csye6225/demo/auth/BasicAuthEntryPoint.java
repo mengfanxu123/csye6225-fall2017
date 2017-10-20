@@ -38,5 +38,4 @@ public class BasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
     setRealmName("csye6225");
     super.afterPropertiesSet();
   }
-
 }

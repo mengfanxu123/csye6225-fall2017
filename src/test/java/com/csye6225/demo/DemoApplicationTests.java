@@ -21,15 +21,12 @@ import java.util.List;
 @SpringBootTest
 public class DemoApplicationTests {
 
-    @Autowired
-    UserRepository userRepository;
     @Test
     public void showAll() {
 
-        List<User> userList=(List<User>)userRepository.findAll();
-        for (User u:userList) {
-            System.out.println(u.getEmail());
-        }
+
+            System.out.println("Hello world");
+
 
   }
 

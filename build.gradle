@@ -35,11 +35,11 @@ idea {
     }
 }
 
-//test{
-//    testLogging{
-//        events 'started','passed'
-//    }
-//}
+test{
+    testLogging{
+        events 'started','passed'
+    }
+}
 
 dependencies {
     // Spring Boot dependencies

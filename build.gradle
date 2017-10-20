@@ -35,6 +35,14 @@ idea {
     }
 }
 
+sourceSets{
+    test{
+        java{
+           srcDir 'com/csye6225/demo'
+       }
+    }
+}
+
 dependencies {
     // Spring Boot dependencies
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -64,6 +72,8 @@ dependencies {
     testCompile('io.rest-assured:rest-assured:3.0.3')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
+
+    testCompile('junit:junit:4.11')
 }
 
 war {

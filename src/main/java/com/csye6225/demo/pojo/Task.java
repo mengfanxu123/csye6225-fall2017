@@ -4,6 +4,7 @@ package com.csye6225.demo.pojo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -15,11 +16,13 @@ public class Task {
     @GeneratedValue(generator = "uuid",strategy = GenerationType.IDENTITY)
     @GenericGenerator(name="uuid",strategy = "uuid")
     private String id;
+
+    @Length(max = 4096)
     private String description;
 
     @OneToMany(cascade = {CascadeType.ALL},fetch =FetchType.LAZY,mappedBy = "task")
     @JsonManagedReference
-    private Set<File> file;
+    private Set<Attachment> file;
 
 
     @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH})
@@ -48,11 +51,11 @@ public class Task {
         this.description = description;
     }
 
-    public Set<File> getFile() {
+    public Set<Attachment> getFile() {
         return file;
     }
 
-    public void setFile(Set<File> file) {
+    public void setFile(Set<Attachment> file) {
         this.file = file;
     }
 

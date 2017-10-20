@@ -35,6 +35,14 @@ idea {
     }
 }
 
+sourceSets{
+    test{
+        java{
+       srcDirs=[ 'com.csye6225.demo/DemoApplicationTests']
+       }
+    }
+}
+
 dependencies {
     // Spring Boot dependencies
     compile('org.springframework.boot:spring-boot-starter-actuator')

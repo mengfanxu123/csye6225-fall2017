@@ -35,11 +35,9 @@ idea {
     }
 }
 
-sourceSets{
-    test{
-        java{
-           srcDirs =['src/java']
-       }
+test{
+    testLogging{
+        events 'started','passed'
     }
 }
 

@@ -8,9 +8,10 @@ install: true
 
 before_script:
  - chmod +x gradlew
- 
+ - chmod +x src/test/java/com/csye6225/Demo/DemoApplicationTests.java
 script:
   - ./gradlew war
+  - gradle -Dtest.single=DemoApplicationTests test
 
 notifications:
   email:

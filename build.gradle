@@ -35,11 +35,9 @@ idea {
     }
 }
 
-sourceSets{
-    test{
-        java{
-           srcDir 'com/csye6225/demo'
-       }
+test{
+    testLogging{
+        events 'started','passed'
     }
 }
 

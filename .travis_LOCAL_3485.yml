@@ -11,10 +11,6 @@ before_script:
 script:
   - ./gradlew war
   - gradle -Dtest.single=DemoApplicationTests test
-<<<<<<< HEAD
-=======
-
->>>>>>> 8408d8c075f220f2c814716ca9615dab04c37817
 notifications:
   email:
     recipients:

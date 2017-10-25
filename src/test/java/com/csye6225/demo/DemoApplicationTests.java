@@ -8,22 +8,43 @@ package com.csye6225.demo;
 
 
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import static org.junit.Assert.assertEquals;
 
+import com.csye6225.demo.pojo.User;
+import org.junit.Test;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
 
 
 
 public class DemoApplicationTests {
 
-
     @Test
     public void showAll() {
-        assertEquals(11,11);
-  }
+
+        boolean flag = false;
+        User newuser = new User();
+        newuser.setEmail("123");
+
+        List<User> userList = new ArrayList<>();
+        User newuser1 = new User();
+        newuser1.setEmail("123");
+        newuser1.setPassword("123");
+        userList.add(newuser1);
+
+        User newuser2 = new User();
+        newuser2.setEmail("1233");
+        newuser2.setPassword("1233");
+        userList.add(newuser2);
 
 
+
+        for (User a : userList) {
+            if (a.getEmail().equals(newuser.getEmail())) {
+                flag = true;
+                break;
+            }
+        }
+        assertEquals(true,flag);
+    }
 }

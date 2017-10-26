@@ -36,6 +36,9 @@
       bucket: csye6225-fall2017-xushua.me
       region: us-east-1
       skip_cleanup: true
+      on:
+        branch: assignment7
+
     - provider: codedeploy
       access_key_id: AKIAJJK3DZ4DJRAQFZRQ
       secret_access_key:
@@ -47,6 +50,8 @@
       deployment_group: SimpleJavaProject
       region: us-east-1
       wait-until-deployed: true
+      on:
+        branch: assignment7
 
 notifications:
   email:

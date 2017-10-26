@@ -61,6 +61,7 @@ dependencies {
     compile('org.apache.httpcomponents:httpclient:+')
     compile('com.google.code.gson:gson:+')
 
+    compile('com.amazonaws:aws-java-sdk-bom:1.10.77')
 
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('mysql:mysql-connector-java')

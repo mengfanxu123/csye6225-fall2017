@@ -3,12 +3,12 @@ os: linux
 
 files:
   - source: ./appspec.yml
-    destination: /home/ubuntu
+    destination: /home/rebe
   - source: ./restartTomcat.sh
-    destination: /home/ubuntu
-  - source: ./build/libs/root.war
-    destination: /var/lib/tomcat7/webapps
-
+    destination: /home/rebe
+  - source: ./build/libs/ROOT.war
+    destination: /home/rebe/apache-tomcat-8.5.20/webapps
+    
 hooks:
   AfterInstall:
    - location: ./restartTomcat.sh

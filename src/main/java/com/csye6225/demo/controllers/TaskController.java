@@ -80,7 +80,7 @@ public class TaskController {
     @PostMapping
     public @ResponseBody Task addTask(@RequestBody Task task,HttpServletResponse response){
 
-        if(task.getDescription().length()>4096){
+        if(task.getDescription().length()>20){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }

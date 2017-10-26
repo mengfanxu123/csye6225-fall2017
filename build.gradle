@@ -35,6 +35,12 @@ idea {
     }
 }
 
+test{
+    testLogging{
+        events 'started','passed'
+    }
+}
+
 dependencies {
     // Spring Boot dependencies
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -55,6 +61,7 @@ dependencies {
     compile('org.apache.httpcomponents:httpclient:+')
     compile('com.google.code.gson:gson:+')
 
+    compile('com.amazonaws:aws-java-sdk-bom:1.10.77')
 
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('mysql:mysql-connector-java')
@@ -64,6 +71,8 @@ dependencies {
     testCompile('io.rest-assured:rest-assured:3.0.3')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
+
+    testCompile('junit:junit')
 }
 
 war {

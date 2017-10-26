@@ -1,29 +1,53 @@
-language: java
+  language: java
 
-jdk:
-  - oraclejdk8
+  jdk:
+    - oraclejdk8
 
-sudo: true
-install: true
+  sudo: false
+  install: true
 
+  before_script:
+   - chmod +x gradlew
+  script:
+    - ./gradlew build
+#    - ./gradlew war
+    - gradle -Dtest.single=DemoApplicationTests test
 
-#deploy:
-#  - provider: s3
-#  access_key_id: "AKIAJJK3DZ4DJRAQFZRQ"
-#  secret_access_key: "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"
-#  bucket: "S3 Bucket"
-#  skip_cleanup: true
-#  - provider: codedeploy
-#  access_key_id: "AKIAJJK3DZ4DJRAQFZRQ"
-#  secret_access_key: "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"
-#  bucket: "S3 Bucket"
-#  revision_type: github
+  after_success:
+    - mkdir codedeploy
+    - zip -r SimpleJavaProject-${TRAVIS_JOB_NUMBER}.zip build/lib/libs/test-1.0.0.war appspec.yml restartTomcat.sh
+    - ls -al
+    - mv -SimpleJavaProject-${TRAVIS_JOB_NUMBER}.zip codedeploy/
+    - ls -al
+    - pwd
+    - cd codedeploy
+    - ls -al
+    - pwd
 
-before_script:
- - chmod +x gradlew
-script:
-  - ./gradlew war
-  - gradle -Dtest.single=DemoApplicationTests test
+  before_deploy:
+    - cd ..
+
+  deploy:
+    - provider: s3
+      access_key_id: AKIAJJK3DZ4DJRAQFZRQ
+      secret_access_key:
+        secure: mR3GDxMEU/lTfskTtDfOsmPVBUX6mCbzL23cdx8xqhp9yHrsikVCFdfhjC7JkIaSL7tQwTMFBAf7MMFZP2mPgVGKR0ODnuNdFJyzdwre8cPaiTQL+rs8Ku0lAylCYc11HryzQnNkgnNFaVGLjWThEqJgYKqOqJsJl6hZOMXbPpp4pqi9mVhKlhc9C/ewo+C1pVyvW6HaMBgLnKD/e6HPlrNDRkaSpTJNuthEhGUi/A9SQLOJiR/o4MwuqINwsRhR90HtGHfMHZzAUZvTnrmaHrBBOmLxELtD8p/3pKA+ahzODICTDMk2HTcXM3eS2qqWb43iY5tW0bnoALzHc2WmfSDcVEcwvCV0rfn3xi2DRNARklXmWPq4swjcEAJmvyFq6o7HosiRqAR4i3dk1r4iat7Jg0iEkx6XZO+oCkjY8g67RaOh/OaaEC/tD3Fil/k5yJqrWQJ5LIdtSP6ToJOfGgvyDWo+p2zlKLspWYil7IcJN98ktSg2u31VPkYekACynlTYn/lE7tQ+zPG+sjDbFrAhjZCBiCBJnRjwYTFd428TV/N4tEvUniDkkftuEo5P6tNO6OeMUqfW0VAVjbFcaADelFxgdBG/g5U1h+sONylNmuWQNZT54dC0KD/DIDAmhQOQCCLOJ3okDjzUT3uJNsMBFpTuLf/DuJl9Ed13XnI=
+      local_dir: codedeploy
+      bucket: csye6225-fall2017-xushua.me
+      region: us-east-1
+      skip_cleanup: true
+    - provider: codedeploy
+      access_key_id: AKIAJJK3DZ4DJRAQFZRQ
+      secret_access_key:
+        secure: mR3GDxMEU/lTfskTtDfOsmPVBUX6mCbzL23cdx8xqhp9yHrsikVCFdfhjC7JkIaSL7tQwTMFBAf7MMFZP2mPgVGKR0ODnuNdFJyzdwre8cPaiTQL+rs8Ku0lAylCYc11HryzQnNkgnNFaVGLjWThEqJgYKqOqJsJl6hZOMXbPpp4pqi9mVhKlhc9C/ewo+C1pVyvW6HaMBgLnKD/e6HPlrNDRkaSpTJNuthEhGUi/A9SQLOJiR/o4MwuqINwsRhR90HtGHfMHZzAUZvTnrmaHrBBOmLxELtD8p/3pKA+ahzODICTDMk2HTcXM3eS2qqWb43iY5tW0bnoALzHc2WmfSDcVEcwvCV0rfn3xi2DRNARklXmWPq4swjcEAJmvyFq6o7HosiRqAR4i3dk1r4iat7Jg0iEkx6XZO+oCkjY8g67RaOh/OaaEC/tD3Fil/k5yJqrWQJ5LIdtSP6ToJOfGgvyDWo+p2zlKLspWYil7IcJN98ktSg2u31VPkYekACynlTYn/lE7tQ+zPG+sjDbFrAhjZCBiCBJnRjwYTFd428TV/N4tEvUniDkkftuEo5P6tNO6OeMUqfW0VAVjbFcaADelFxgdBG/g5U1h+sONylNmuWQNZT54dC0KD/DIDAmhQOQCCLOJ3okDjzUT3uJNsMBFpTuLf/DuJl9Ed13XnI=
+      bucket: csye6225-fall2017-xushua.me
+      key: SimpleJavaProject-${TRAVIS_JOB_NUMBER}.zip
+      bundle_type: zip
+      application: SimpleJavaProject
+      deployment_group: SimpleJavaProject
+      region: us-east-1
+      wait-until-deployed: true
+
 notifications:
   email:
     recipients:

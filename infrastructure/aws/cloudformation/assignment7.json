@@ -5,23 +5,6 @@
      
          "EC2Instance": {
             "Type": "AWS::EC2::Instance",
-            "Metadata":{
-              "AWS::CloudFormation::Init":{
-                "configSets":{
-                  "InstallAndRun":["Install","Configure"]
-                },
-                "Install":{
-                  "packages":{
-                    "apt-get":{
-                      "java-1.8.0-openjdk":[],
-                      "tomcat8":[],
-                      "CodeDeployAgent":[]
-                    }
-                  },
-                  "files":{}
-                }
-              }
-            },
             "Properties": {
                 "ImageId": "ami-cd0f5cb6",
                 "InstanceType": "t2.micro",
@@ -38,27 +21,25 @@
                     "Fn::Join":["",[
                       "#!/bin/bash -v\n",
                       "sudo apt-get update\n",
-                      "sudo apt install default-jre\n",
-
-                      "# Install the files and packages from the metadata\n",
-                      "/opt/aws/bin/cfn-init -v",
-                      "--stack",{"Ref":"AWS::StackName"},
-                      "--resource EC2Instance",
-                      "--configSets InstallAndRun",
-                      "--region",{"Ref":"AWS::Region"}, "\n",
-
-                      "# Signal the status from cfn-init\n",
-                      "/opt/aws/bin/cfn-signal -e $? ",
-                      "--stack",{"Ref":"AWS::StackName"},
-                      "--resource EC2Instance",
-                      "--region",{"Ref":"AWS::Region"}, "\n"
+                      "sudo apt-get -y install default-jre\n",
+                      "sudo chmod 777 /etc/environment\n",
+                      "echo \"JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\" >> /etc/environment\n",
+                      "source /etc/environment\n",
+                      "echo $JAVA_HOME\n",
+                      "sudo apt-get -y install tomcat8\n",
+                      "sudo service tomcat8 start\n",
+                      "sudo service tomcat8 status\n",
+                      "sudo apt-get update\n",
+                      "sudo apt-get -y install ruby\n",
+                      "sudo apt-get -y install wget\n",
+                      "cd /home/ubuntu\n",
+                      "wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install\n",
+                      "chmod +x ./install\n",
+                      "sudo ./install auto\n",
+                      "sudo service codedeploy-agent start\n",
+                      "sudo service codedeploy-agent status\n"
                 ]]}}
-            },
-           "CreationPolicy":{
-             "ResourceSignal":{
-               "Timeout":"PT5M"
-             }
-           }
+            }
         },    
         "EC2InstanceSG": {
             "Type": "AWS::EC2::SecurityGroup",

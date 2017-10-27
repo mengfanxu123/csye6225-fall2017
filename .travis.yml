@@ -10,8 +10,7 @@ script:
 - gradle -Dtest.single=DemoApplicationTests test
 after_success:
 - mkdir codedeploy
-- zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/lib/libs/test-1.0.0.war
-  appspec.yml restartTomcat.sh
+- zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/lib/libs/test-1.0.0.war appspec.yml restartTomcat.sh
 - ls -al
 - mv -csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
 - ls -al

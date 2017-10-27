@@ -1,59 +1,50 @@
-  language: java
-
-  jdk:
-    - oraclejdk8
-
-  sudo: false
-  install: true
-
-  before_script:
-   - chmod +x gradlew
-  script:
-    - ./gradlew war
-#    - ./gradlew war
-    - gradle -Dtest.single=DemoApplicationTests test
-
-  after_success:
-    - mkdir codedeploy
-    - zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/lib/libs/test-1.0.0.war appspec.yml restartTomcat.sh
-    - ls -al
-    - mv -csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
-    - ls -al
-    - pwd
-    - cd codedeploy
-    - ls -al
-    - pwd
-
-  before_deploy:
-    - cd ..
-
-  deploy:
-    - provider: s3
-      access_key_id: AKIAJJK3DZ4DJRAQFZRQ
-      secret_access_key:
-        secure:
-      local_dir: codedeploy
-      bucket: csye6225-fall2017-xushua.me
-      region: us-east-1
-      skip_cleanup: true
-      on:
-        branch: assignment7
-
-    - provider: codedeploy
-      access_key_id: AKIAJJK3DZ4DJRAQFZRQ
-      secret_access_key:
-        secure: 
-      bucket: csye6225-fall2017-xushua.me
-      key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
-      bundle_type: zip
-      application: csye6225-fall2017
-      deployment_group: csye6225-fall2017
-      region: us-east-1
-      wait-until-deployed: true
-      on:
-        branch: assignment7
-
-notifications:
-  email:
-    recipients:
-      - zhang.mengf@husky.neu.edu
+language: java
+jdk:
+- oraclejdk8
+sudo: false
+install: true
+before_script:
+- chmod +x gradlew
+script:
+- "./gradlew war"
+- gradle -Dtest.single=DemoApplicationTests test
+after_success:
+- mkdir codedeploy
+- zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/lib/libs/test-1.0.0.war
+  appspec.yml restartTomcat.sh
+- ls -al
+- mv -csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
+- ls -al
+- pwd
+- cd codedeploy
+- ls -al
+- pwd
+before_deploy:
+- cd ..
+deploy:
+- provider: s3
+  access_key_id: AKIAJJK3DZ4DJRAQFZRQ
+  secret_access_key:
+    secure: 
+  local_dir: codedeploy
+  bucket: csye6225-fall2017-xushua.me
+  region: us-east-1
+  skip_cleanup: true
+  on:
+    branch: assignment7
+- provider: codedeploy
+  access_key_id: AKIAJJK3DZ4DJRAQFZRQ
+  secret_access_key:
+    secure: 
+  bucket: csye6225-fall2017-xushua.me
+  key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
+  bundle_type: zip
+  application: csye6225-fall2017
+  deployment_group: csye6225-fall2017
+  region: us-east-1
+  wait-until-deployed: true
+  on:
+    branch: assignment7
+env:
+  global:
+    secure: ESuXUrbIoFRO9t6Y0wWhCCoOrnrw+//cSdtk1g1hOczXP2u6u7oYzIzRH57LuId3674XGOEpuEPXNNh/kbZTxsz4Yg3x5CCNu4BfCQsOHv1QE7P2WAw+tsHKvWgXgUOca0gQAgmPYHqfpvEZbv0gJMMGhbvjnIjjkhnqn4fzxPZFefz15YpHSrK5THoj2wjOwiIXfO+eNwfksDfUN+17goPUxY1ZXGj+x0Y2K2JUjycKDuYKkJfFq7MyoF6mQQ/JKjLNHsIvsHQV87Vx6Qvf4O/R0hTImoJilPdKyQ5XQfQuv5/dAzUUiOcFWuOlU6MGW1m5jYK/3/Smfq5bm308/l9l36H+14QUQDoF98CIux9LxbSmFs9hvbHdKPhq/pfh+14MW5Od76M8isDXDKpEIf8St41rKGV1H6vTwRVJ9qr81gp2Al+CCBp8r5koETqNy11pVXOUr1THP6s4ggbb5Zboo42cWErKFgbT35aPKFNvOp0bZZzoFsg1BN8Q4Gnm/YIr8nYizttqoXhmkHyQ3le329AJz43DexNfHizMSXKrHZ5zGt3Uv7ReIjeV1yoBlufeSPgFOSjLbsuTc6CSTGNoMzhaYtk60vMjbpA9nvkreaWvdrls14rEDu1sKeCp5X9h0HmMX1bBiKqK3LkBMvRHs0YEaIiniGMSlbHBVEE=

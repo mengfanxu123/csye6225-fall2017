@@ -25,7 +25,7 @@ deploy:
 - provider: s3
   access_key_id: AKIAJJK3DZ4DJRAQFZRQ
   secret_access_key:
-    secure: 
+    secure: ESuXUrbIoFRO9t6Y0wWhCCoOrnrw+//cSdtk1g1hOczXP2u6u7oYzIzRH57LuId3674XGOEpuEPXNNh/kbZTxsz4Yg3x5CCNu4BfCQsOHv1QE7P2WAw+tsHKvWgXgUOca0gQAgmPYHqfpvEZbv0gJMMGhbvjnIjjkhnqn4fzxPZFefz15YpHSrK5THoj2wjOwiIXfO+eNwfksDfUN+17goPUxY1ZXGj+x0Y2K2JUjycKDuYKkJfFq7MyoF6mQQ/JKjLNHsIvsHQV87Vx6Qvf4O/R0hTImoJilPdKyQ5XQfQuv5/dAzUUiOcFWuOlU6MGW1m5jYK/3/Smfq5bm308/l9l36H+14QUQDoF98CIux9LxbSmFs9hvbHdKPhq/pfh+14MW5Od76M8isDXDKpEIf8St41rKGV1H6vTwRVJ9qr81gp2Al+CCBp8r5koETqNy11pVXOUr1THP6s4ggbb5Zboo42cWErKFgbT35aPKFNvOp0bZZzoFsg1BN8Q4Gnm/YIr8nYizttqoXhmkHyQ3le329AJz43DexNfHizMSXKrHZ5zGt3Uv7ReIjeV1yoBlufeSPgFOSjLbsuTc6CSTGNoMzhaYtk60vMjbpA9nvkreaWvdrls14rEDu1sKeCp5X9h0HmMX1bBiKqK3LkBMvRHs0YEaIiniGMSlbHBVEE=
   local_dir: codedeploy
   bucket: csye6225-fall2017-xushua.me
   region: us-east-1
@@ -35,7 +35,7 @@ deploy:
 - provider: codedeploy
   access_key_id: AKIAJJK3DZ4DJRAQFZRQ
   secret_access_key:
-    secure: 
+    secure: ESuXUrbIoFRO9t6Y0wWhCCoOrnrw+//cSdtk1g1hOczXP2u6u7oYzIzRH57LuId3674XGOEpuEPXNNh/kbZTxsz4Yg3x5CCNu4BfCQsOHv1QE7P2WAw+tsHKvWgXgUOca0gQAgmPYHqfpvEZbv0gJMMGhbvjnIjjkhnqn4fzxPZFefz15YpHSrK5THoj2wjOwiIXfO+eNwfksDfUN+17goPUxY1ZXGj+x0Y2K2JUjycKDuYKkJfFq7MyoF6mQQ/JKjLNHsIvsHQV87Vx6Qvf4O/R0hTImoJilPdKyQ5XQfQuv5/dAzUUiOcFWuOlU6MGW1m5jYK/3/Smfq5bm308/l9l36H+14QUQDoF98CIux9LxbSmFs9hvbHdKPhq/pfh+14MW5Od76M8isDXDKpEIf8St41rKGV1H6vTwRVJ9qr81gp2Al+CCBp8r5koETqNy11pVXOUr1THP6s4ggbb5Zboo42cWErKFgbT35aPKFNvOp0bZZzoFsg1BN8Q4Gnm/YIr8nYizttqoXhmkHyQ3le329AJz43DexNfHizMSXKrHZ5zGt3Uv7ReIjeV1yoBlufeSPgFOSjLbsuTc6CSTGNoMzhaYtk60vMjbpA9nvkreaWvdrls14rEDu1sKeCp5X9h0HmMX1bBiKqK3LkBMvRHs0YEaIiniGMSlbHBVEE=
   bucket: csye6225-fall2017-xushua.me
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip

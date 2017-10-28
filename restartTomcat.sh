@@ -1,4 +1,4 @@
-cd /home/rebe/apache-tomcat-8.5.20/bin&&
+cd /etc/tomcat8/bin&&
 sh shutdown.sh stop&&
 wait ${!}&&
 sh startup.sh start&&

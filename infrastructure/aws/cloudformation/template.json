@@ -154,7 +154,7 @@
                   "s3:List*"
                 ],
                 "Effect": "Allow",
-                "Resource": "*"
+                "Resource": "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
               }
             ]},
           "Roles":[{"Ref":"CodeDeployEC2ServiceRole"}]

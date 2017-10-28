@@ -12,7 +12,7 @@ after_success:
 - mkdir codedeploy
 - zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/libs/ROOT.war appspec.yml restartTomcat.sh
 - ls -al
-- mv -csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
+- mv csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
 - ls -al
 - pwd
 - cd codedeploy

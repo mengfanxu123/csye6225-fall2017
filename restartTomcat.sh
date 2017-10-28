@@ -1,5 +1,3 @@
-cd /etc/tomcat8/bin&&
-sh shutdown.sh stop&&
-wait ${!}&&
-sh startup.sh start&&
+#!/bin/bash
+sudo service tomcat8 restart&&
 echo done

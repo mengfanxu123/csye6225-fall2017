@@ -153,6 +153,7 @@
        } ]
     }
  },
+
  "TravisS3Policy": {
     "Type": "AWS::IAM::Policy",
     "Properties": {

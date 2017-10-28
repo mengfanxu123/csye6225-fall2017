@@ -1,0 +1,16 @@
+version: 0.0
+os: linux
+
+files:
+  - source: ./appspec.yml
+    destination: /home/rebe
+  - source: ./restartTomcat.sh
+    destination: /home/rebe
+  - source: ./build/libs/ROOT.war
+    destination: /home/rebe/apache-tomcat-8.5.20/webapps
+    
+hooks:
+  AfterInstall:
+   - location: ./restartTomcat.sh
+     timeout: 180
+     runas: ubuntu

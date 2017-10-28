@@ -35,16 +35,21 @@ deploy:
   secret_access_key:
     secure: lHSqZTJ1h+/w+FVHvOPathD4WBLmMqtr1dGRH0aA0VLTJpW7+ybvLYYgqjXM0lSndappvolQ6T6x0lzXbKrggQ3Kvn62+WWWgigkexvF8T5gRZ8HSumaB40dA4O1WURSXIcE9oaPrABzkau1KMTl+0lZIWgJ1u0aoUP1Kkirq6Hujt2MngnTuVB7sz3IJp7BwiHPUiW99RNG3xmRrcXbiiryhD/KSAyKZ7ThGeCiSzRi0RaBwBfuZOlDYghP5vpBJd2f3/TZiMsIO0BrQdMoMdhTPCsCtMwBTn3qNulAwdU2WzOaEAm9Z8op+NeRHa1578OXjBCiobDXn/Je4rJg8pBOpDRx2lSu6IB04NaFwEsZlLCdbNocql/ShFOSFWbvB4E6LProcWgctFWfMHym6dKTrw0571nNkn3f3506s5zo/IOTsOVbWUZpQZJoSRktu0wk/zHVGnKNqrLVUe0ykw3I/Cz/30i9/aGGak2TFYqrSHRMmY0mOxSAZ1IbjsA7mansYv49CLaMnk0HUXe+WRVlZefwI37uO+qxa+z1/GuqBjOwQ38tAcbWUDDNCTB2ms2qtRXjVJUJuZrXRlX369WdRBFl1/r3RslPB3mo1uPFWVVmokrPY4sEWEv4d3GzF3Zx3TgrJAbTQC/BAajWGpUekwX5Dhhc2HQzkrJw030=
   local_dir: codedeploy
-  bucket: csye6225-fall2017-xushua.me
+  bucket: csye6225-fall2017-xumengf.me
   region: us-east-1
   skip_cleanup: true
   on:
     branch: assignment7
 - provider: codedeploy
   access_key_id: AKIAJJK3DZ4DJRAQFZRQ
+<<<<<<< HEAD
   secret_access_key:
     secure: lHSqZTJ1h+/w+FVHvOPathD4WBLmMqtr1dGRH0aA0VLTJpW7+ybvLYYgqjXM0lSndappvolQ6T6x0lzXbKrggQ3Kvn62+WWWgigkexvF8T5gRZ8HSumaB40dA4O1WURSXIcE9oaPrABzkau1KMTl+0lZIWgJ1u0aoUP1Kkirq6Hujt2MngnTuVB7sz3IJp7BwiHPUiW99RNG3xmRrcXbiiryhD/KSAyKZ7ThGeCiSzRi0RaBwBfuZOlDYghP5vpBJd2f3/TZiMsIO0BrQdMoMdhTPCsCtMwBTn3qNulAwdU2WzOaEAm9Z8op+NeRHa1578OXjBCiobDXn/Je4rJg8pBOpDRx2lSu6IB04NaFwEsZlLCdbNocql/ShFOSFWbvB4E6LProcWgctFWfMHym6dKTrw0571nNkn3f3506s5zo/IOTsOVbWUZpQZJoSRktu0wk/zHVGnKNqrLVUe0ykw3I/Cz/30i9/aGGak2TFYqrSHRMmY0mOxSAZ1IbjsA7mansYv49CLaMnk0HUXe+WRVlZefwI37uO+qxa+z1/GuqBjOwQ38tAcbWUDDNCTB2ms2qtRXjVJUJuZrXRlX369WdRBFl1/r3RslPB3mo1uPFWVVmokrPY4sEWEv4d3GzF3Zx3TgrJAbTQC/BAajWGpUekwX5Dhhc2HQzkrJw030=
+  bucket: csye6225-fall2017-xumengf.me
+=======
+  secret_access_key: YL2oWyXKvy0cJyKmaE70wUj2hl98gTWr32Rr0FsS
   bucket: csye6225-fall2017-xushua.me
+>>>>>>> Update .travis.yml
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip
   application: csye6225-fall2017

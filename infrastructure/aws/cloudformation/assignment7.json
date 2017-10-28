@@ -79,8 +79,139 @@
            "CidrIp": "0.0.0.0/0",
            "GroupId": {"Fn::GetAtt": ["EC2InstanceSG", "GroupId"]}        
       }
+    },
+    "EC2Role": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+           "AssumeRolePolicyDocument": {
+              "Version" : "2012-10-17",
+              "Statement": [ {
+                 "Effect": "Allow",
+                 "Principal": {
+                    "Service": [ "ec2.amazonaws.com" ]
+                 },
+                 "Action": [ "sts:AssumeRole" ]
+              } ]
+           },
+           "Path": "/",
+           "RoleName":"CodeDeployEC2cServiceRole"
+        }
+     },
+     "RolePolicy": {
+        "Type": "AWS::IAM::Policy",
+        "Properties": {
+           "PolicyName": "CodeDeploy-EC2-S3",
+           "PolicyDocument": {
+              "Version" : "2012-10-17",
+              "Statement": [ {
+                 "Effect": "Allow",
+                 "Action": [
+                    "s3:Get*",
+                    "s3:List*"
+                  ],
+                 "Resource": "*"
+              } ]
+           },
+           "Roles": [ {
+              "Ref": "EC2Role"
+           } ]
+        }
+     },
+     "EC2InstanceProfile": {
+        "Type": "AWS::IAM::InstanceProfile",
+        "Properties": {
+           "Path": "/",
+           "Roles": [ {
+              "Ref": "EC2Role"
+           } ]
+        }
+     },
+   "CodeDeployServiceRole": {
+    "Type": "AWS::IAM::Role",
+    "Properties": {
+       "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ {
+             "Effect": "Allow",
+             "Principal": {
+                "Service": [ "codedeploy.amazonaws.com" ]
+             },
+             "Action": [ "sts:AssumeRole" ]
+          } ]
+       },
+       "Path": "/",
+       "ManagedPolicyArns":[" arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"],
+       "RoleName":"CodeDeployServiceRole"
     }
-   },
+ },
+ "CodeDeployProfile": {
+    "Type": "AWS::IAM::InstanceProfile",
+    "Properties": {
+       "Path": "/",
+       "Roles": [ {
+          "Ref": "CodeDeployServiceRole"
+       } ]
+    }
+ },
+ "TravisS3Policy": {
+    "Type": "AWS::IAM::Policy",
+    "Properties": {
+       "PolicyName": "Travis-Upload-To-S3",
+       "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ {
+             "Effect": "Allow",
+             "Action": [
+                "s3:PutObject"
+              ],
+             "Resource": "*"
+          } ]
+        }
+      }
+    },
+    "TravisDeployPolicy": {
+        "Type": "AWS::IAM::Policy",
+        "Properties": {
+           "PolicyName": "Travis-Code-Deploy",
+           "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "codedeploy:RegisterApplicationRevision",
+                        "codedeploy:GetApplicationRevision"
+                    ],
+                    "Resource": [
+                        "arn:aws:codedeploy:use-east-1:624004284315:application:TestApp"
+                    ]
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "codedeploy:CreateDeployment",
+                        "codedeploy:GetDeployment"
+                    ],
+                    "Resource": [
+                        "*"
+                    ]
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "codedeploy:GetDeploymentConfig"
+                    ],
+                    "Resource": [
+                        "arn:aws:codedeploy:us-east-1:624004284315:deploymentconfig:CodeDeployDefault.OneAtATime",
+                        "arn:aws:codedeploy:us-east-1:624004284315:deploymentconfig:CodeDeployDefault.HalfAtATime",
+                        "arn:aws:codedeploy:us-east-1:624004284315:deploymentconfig:CodeDeployDefault.AllAtOnce"
+                    ]
+                }
+            ]
+        }
+          }
+        }
+},
     "Parameters" : {
           "ParamVpcID" : {
             "Type" : "String"

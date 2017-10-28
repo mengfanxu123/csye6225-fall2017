@@ -140,7 +140,7 @@
           } ]
        },
        "Path": "/",
-       "ManagedPolicyArns":[" arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"],
+       "ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"],
        "RoleName":"CodeDeployServiceRole"
     }
  },
@@ -154,9 +154,9 @@
     }
  },
  "TravisS3Policy": {
-    "Type": "AWS::IAM::Policy",
+    "Type": "AWS::IAM::ManagedPolicy",
     "Properties": {
-       "PolicyName": "Travis-Upload-To-S3",
+       "ManagedPolicyName": "Travis-Upload-To-S3",
        "PolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [ {
@@ -170,9 +170,9 @@
       }
     },
     "TravisDeployPolicy": {
-        "Type": "AWS::IAM::Policy",
+        "Type": "AWS::IAM::ManagedPolicy",
         "Properties": {
-           "PolicyName": "Travis-Code-Deploy",
+           "ManagedPolicyName": "Travis-Code-Deploy",
            "PolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [

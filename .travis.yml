@@ -38,7 +38,7 @@ deploy:
   bucket: csye6225-fall2017-xushua.me
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip
-  application: csye6225-fall2017
+  application: code-deploy.csye6225-fall2017
   deployment_group: csye6225-fall2017
   region: us-east-1
   wait-until-deployed: true

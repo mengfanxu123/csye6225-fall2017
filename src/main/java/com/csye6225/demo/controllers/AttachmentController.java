@@ -1,6 +1,7 @@
 package com.csye6225.demo.controllers;
 
 
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.regions.*;
@@ -66,7 +67,7 @@ public class AttachmentController {
 
 
         String bucketName="csye6225-fall2017-xushua.me";
-        AmazonS3 amazonS3=new AmazonS3Client();
+        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;

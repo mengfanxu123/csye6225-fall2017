@@ -67,7 +67,7 @@ public class AttachmentController {
 
 
         String bucketName="csye6225-fall2017-xushua.me";
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
+        AmazonS3 amazonS3=new AmazonS3Client();
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;

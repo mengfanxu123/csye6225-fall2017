@@ -16,6 +16,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 apply plugin: 'idea'
 
+
+
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -41,6 +43,7 @@ test{
     }
 }
 
+
 dependencies {
     // Spring Boot dependencies
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -61,10 +64,13 @@ dependencies {
     compile('org.apache.httpcomponents:httpclient:+')
     compile('com.google.code.gson:gson:+')
 
+
     compile('com.amazonaws:aws-java-sdk-bom:1.10.77')
+    compile 'com.amazonaws:aws-java-sdk:1.9.6'
 
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('mysql:mysql-connector-java')
+
 
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 

@@ -80,7 +80,7 @@
            "GroupId": {"Fn::GetAtt": ["EC2InstanceSG", "GroupId"]}        
       }
     }
-   },
+},
     "Parameters" : {
           "ParamVpcID" : {
             "Type" : "String"

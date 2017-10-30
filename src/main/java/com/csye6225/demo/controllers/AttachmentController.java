@@ -1,5 +1,10 @@
 package com.csye6225.demo.controllers;
 
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.regions.*;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.csye6225.demo.repository.AttachmentRpository;
 import com.csye6225.demo.repository.TaskRepository;
 import com.csye6225.demo.repository.UserRepository;
@@ -8,13 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.csye6225.demo.pojo.*;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/tasks/{id}")
@@ -58,13 +62,21 @@ public class AttachmentController {
 
 
     @PostMapping(value = "/attachments")
-    public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment, @PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
+    public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment1, @PathVariable(name="id")String id, HttpServletResponse response)throws Exception{
 
 
+        String bucketName="csye6225-fall2017-xushua.me";
+        AmazonS3 amazonS3=new AmazonS3Client();
+        String key = "MyFile"+ UUID.randomUUID();
+
+        String url="https://s3.amazonaws.com/"+bucketName+"/"+key;
+
+        File file =new File(attachment1.getUrl());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user=new User();
+        Attachment attachment=new Attachment();
         List<User> userList = (List<User>)userRepository.findAll();
         for (com.csye6225.demo.pojo.User u:userList) {
             if(username.equals(u.getEmail())){
@@ -76,7 +88,10 @@ public class AttachmentController {
         Task task=taskRepository.findOne(id);
         if(task.getUser().equals(user)) {
             attachment.setTask(task);
+            attachment.setUrl(url);
             fileRpository.save(attachment);
+            amazonS3.putObject(new PutObjectRequest(bucketName,key,file));
+
             return attachment;
         } else {
             response.addHeader("403 Forbidden","Basic realm=Forbidden");
@@ -87,6 +102,9 @@ public class AttachmentController {
 
     @DeleteMapping("/attachments/{idAttachments}")
     public  void deleteFile(@PathVariable(name="idAttachments")String idAttachments,@PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
+
+        String bucketName="csye6225-fall2017-xushua.me";
+        AmazonS3 amazonS3=new AmazonS3Client();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user=new User();
@@ -99,7 +117,12 @@ public class AttachmentController {
         }
         Task task=taskRepository.findOne(id);
         if(task.getUser().equals(user)) {
+            String url=fileRpository.findOne(idAttachments).getUrl();
+            String [] a=url.split("/");
+            String key=a[a.length-1];
+            amazonS3.deleteObject(bucketName,key);
             fileRpository.delete(idAttachments);
+
         }else{
             response.addHeader("403 Forbidden","Basic realm=Forbidden");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

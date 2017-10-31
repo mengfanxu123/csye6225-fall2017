@@ -6,15 +6,20 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 
+import java.io.FileInputStream;
 import java.util.List;
+import java.util.Properties;
 
 public class Test {
     public static void main(String[] args) {
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
-        List<Bucket>buckets=amazonS3.listBuckets();
-        for (Bucket b:buckets
-             ) {
-            System.out.println(b.getName());
+        Properties prop =new Properties();
+        try {
+            prop.load(new FileInputStream("src/main/File/File.properties"));
+            System.out.println(prop.getProperty("bucketName"));
+            System.out.println(prop.getProperty("accessKey"));
+            System.out.println(prop.getProperty("secretKey"));
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

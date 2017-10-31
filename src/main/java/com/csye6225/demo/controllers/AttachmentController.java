@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import com.csye6225.demo.pojo.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.io.FileInputStream;
+import java.util.*;
 
 @RestController
 @RequestMapping("/tasks/{id}")
@@ -66,8 +64,10 @@ public class AttachmentController {
     public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment1, @PathVariable(name="id")String id, HttpServletResponse response)throws Exception{
 
 
-        String bucketName="csye6225-fall2017-xushua.me";
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
+        Properties prop =new Properties();
+        prop.load(new FileInputStream("src/main/File/File.properties"));
+        String bucketName=prop.getProperty("bucketName");
+        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials(prop.getProperty("accessKey"),prop.getProperty("secretKey")));
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;
@@ -104,9 +104,10 @@ public class AttachmentController {
     @DeleteMapping("/attachments/{idAttachments}")
     public  void deleteFile(@PathVariable(name="idAttachments")String idAttachments,@PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
 
-        String bucketName="csye6225-fall2017-xushua.me";
-        String bucketNameqqq="csye6225-fall2017-xushua.me";
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
+        Properties prop =new Properties();
+        prop.load(new FileInputStream("src/main/File/File.properties"));
+        String bucketName=prop.getProperty("bucketName");
+        AmazonS3 amazonS3=new AmazonS3Client();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user=new User();

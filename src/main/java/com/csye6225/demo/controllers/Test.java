@@ -14,10 +14,8 @@ public class Test {
     public static void main(String[] args) {
         Properties prop =new Properties();
         try {
-            prop.load(new FileInputStream("src/main/File/File.properties"));
+            prop.load(new FileInputStream("src/main/resources/application-aws.properties"));
             System.out.println(prop.getProperty("bucketName"));
-            System.out.println(prop.getProperty("accessKey"));
-            System.out.println(prop.getProperty("secretKey"));
         }catch (Exception e){
             e.printStackTrace();
         }

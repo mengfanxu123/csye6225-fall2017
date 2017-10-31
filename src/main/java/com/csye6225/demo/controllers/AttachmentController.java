@@ -66,8 +66,8 @@ public class AttachmentController {
     public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment1, @PathVariable(name="id")String id, HttpServletResponse response)throws Exception{
 
 
-        String bucketName="csye6225-fall2017-xushua.me";
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
+        String bucketName="csye6225-fall2017-zhangmengf.me";
+        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAISPYBWRY3NPC2SAA","Y7Aw7Mm1abJkNMVAaxo4dq9kN8eHYPEUVV6zuuRR"));
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;
@@ -104,8 +104,8 @@ public class AttachmentController {
     @DeleteMapping("/attachments/{idAttachments}")
     public  void deleteFile(@PathVariable(name="idAttachments")String idAttachments,@PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
 
-        String bucketName="csye6225-fall2017-xushua.me";
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
+        String bucketName="csye6225-fall2017-zhangmengf.me";
+        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAISPYBWRY3NPC2SAA","Y7Aw7Mm1abJkNMVAaxo4dq9kN8eHYPEUVV6zuuRR"));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user=new User();

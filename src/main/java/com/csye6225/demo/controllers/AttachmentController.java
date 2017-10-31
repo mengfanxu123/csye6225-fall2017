@@ -105,6 +105,7 @@ public class AttachmentController {
     public  void deleteFile(@PathVariable(name="idAttachments")String idAttachments,@PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
 
         String bucketName="csye6225-fall2017-xushua.me";
+        String bucketNameqqq="csye6225-fall2017-xushua.me";
         AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAJZEYT3624WSNBEGA","uQpsuS7IQHXqO0AgBxeH8KVGgs2HhC9O4JwgAku6"));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

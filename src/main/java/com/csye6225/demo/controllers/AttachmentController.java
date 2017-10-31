@@ -65,7 +65,7 @@ public class AttachmentController {
 
 
         Properties prop =new Properties();
-        prop.load(new FileInputStream("src/main/resources/application-aws.properties"));
+        prop.load(new FileInputStream("/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application-aws.properties"));
         String bucketName=prop.getProperty("bucketName");
         AmazonS3 amazonS3=new AmazonS3Client();
         String key = "MyFile"+ UUID.randomUUID();
@@ -105,7 +105,7 @@ public class AttachmentController {
     public  void deleteFile(@PathVariable(name="idAttachments")String idAttachments,@PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
 
         Properties prop =new Properties();
-        prop.load(new FileInputStream("src/main/resources/application-aws.properties"));
+        prop.load(new FileInputStream("/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application-aws.properties"));
         String bucketName=prop.getProperty("bucketName");
         AmazonS3 amazonS3=new AmazonS3Client();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -67,7 +67,7 @@ public class AttachmentController {
         Properties prop =new Properties();
         prop.load(new FileInputStream("src/main/File/File.properties"));
         String bucketName=prop.getProperty("bucketName");
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials(prop.getProperty("accessKey"),prop.getProperty("secretKey")));
+        AmazonS3 amazonS3=new AmazonS3Client();
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;

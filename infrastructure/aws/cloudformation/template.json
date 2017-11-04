@@ -2,16 +2,53 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
     "Resources": {
-         
-        "EC2InstanceSG": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-            "GroupDescription": "Sample EC2Instabce security group",
-            "GroupName":"csye6225-webapp",
-            "VpcId":{"Ref":"ParamVpcID"}
-                          }
-                         },
-        "RDSSG": {
+      "EC2Instance": {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+          "ImageId": "ami-cd0f5cb6",
+          "InstanceType": "t2.micro",
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": ["EC2InstanceSG","GroupId"]
+            }
+          ],
+          "KeyName": "MyKeyPair",
+          "SubnetId":{"Ref":"ParamSubnetId1"},
+          "Tags":[{"Key":"NAME","Value":"CSYE6225"}],
+          "UserData":{
+            "Fn::Base64":{
+              "Fn::Join":["",[
+                "#!/bin/bash -v\n",
+                "sudo apt-get update\n",
+                "sudo apt-get -y install default-jre\n",
+                "sudo chmod 777 /etc/environment\n",
+                "echo \"JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\" >> /etc/environment\n",
+                "source /etc/environment\n",
+                "echo $JAVA_HOME\n",
+                "sudo apt-get -y install tomcat8\n",
+                "sudo service tomcat8 start\n",
+                "sudo service tomcat8 status\n",
+                "sudo apt-get update\n",
+                "sudo apt-get -y install ruby\n",
+                "sudo apt-get -y install wget\n",
+                "cd /home/ubuntu\n",
+                "wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install\n",
+                "chmod +x ./install\n",
+                "sudo ./install auto\n",
+                "sudo service codedeploy-agent start\n",
+                "sudo service codedeploy-agent status\n"
+              ]]}}
+        }
+      },
+      "EC2InstanceSG": {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "Sample EC2Instabce security group",
+          "GroupName":"csye6225-webapp",
+          "VpcId":{"Ref":"ParamVpcID"}
+        }
+      },
+      "RDSSG": {
             "Type": "AWS::RDS::DBSecurityGroup",
             "Properties": {
             "GroupDescription": "Sample RDS security group",
@@ -53,7 +90,7 @@
            "Type": "AWS::RDS::DBSecurityGroupIngress",
            "Properties":{
            "DBSecurityGroupName":{"Ref":"RDSSG"},
-           "EC2SecurityGroupId": {"Fn::GetAtt": ["EC2InstanceSG","GroupId"]},   
+           "EC2SecurityGroupId": {"Fn::GetAtt": ["EC2InstanceSG","GroupId"]}
       }
     },
 
@@ -104,7 +141,96 @@
           "Properties" : {
             "BucketName" : {"Ref":"ParamS3Name"}
           }
-       }
+       },
+      "CodeDeployEC2S3":{
+        "Type":"AWS::IAM::Policy",
+        "Properties":{
+          "PolicyName":"CodeDeploy-EC2-S3",
+          "PolicyDocument":{
+            "Version": "2012-10-17",
+            "Statement": [{
+                "Action": [
+                  "s3:Get*",
+                  "s3:List*"
+                ],
+                "Effect": "Allow",
+                "Resource": "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+              }
+            ]},
+          "Roles":[{"Ref":"CodeDeployEC2ServiceRole"}]
+        }
+      },
+      "TravisUploadToS3":{
+        "Type":"AWS::IAM::Policy",
+        "Properties":{
+          "PolicyName":"Travis-Upload-To-S3",
+          "PolicyDocument":{
+            "Version": "2012-10-17",
+            "Statement": [{
+                "Effect": "Allow",
+                "Action": ["s3:PutObject"],
+                "Resource": [
+                  "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+                ]
+              }
+            ]}
+          }
+      },
+      "TravisCodeDeploy": {
+        "Type": "AWS::IAM::Policy",
+        "Properties": {
+          "PolicyName":"Travis-Code-Deploy",
+          "PolicyDocument":{
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "codedeploy:RegisterApplicationRevision",
+                  "codedeploy:GetApplicationRevision"
+                ],
+                "Resource": [
+                  "arn:aws:codedeploy:us-east-1:179107530530:application:csye6225-fall2017"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "codedeploy:CreateDeployment",
+                  "codedeploy:GetDeployment"
+                ],
+                "Resource": [
+                  "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "codedeploy:GetDeploymentConfig"
+                ],
+                "Resource": [
+                  "arn:aws:codedeploy:us-east-1:179107530530:deploymentconfig:CodeDeployDefault.OneAtATime",
+                  "arn:aws:codedeploy:us-east-1:179107530530:deploymentconfig:CodeDeployDefault.HalfAtATime",
+                  "arn:aws:codedeploy:us-east-1:179107530530:deploymentconfig:CodeDeployDefault.AllAtOnce"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "CodeDeployEC2ServiceRole":{
+        "Type":"AWS::IAM::Role",
+        "Properties":{
+          "RoleName":"CodeDeployEC2ServiceRole"
+        }
+      },
+      "CodeDeployServiceRole":{
+        "Type":"AWS::IAM::Role",
+        "Properties":{
+          "RoleName":"CodeDeployServiceRole",
+          "Policies":[{"PolicyName":"AWSCodeDeployRole"}]
+        }
+      }
    },
     "Parameters" : {
           "ParamVpcID" : {

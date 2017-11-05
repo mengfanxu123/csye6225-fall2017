@@ -44,4 +44,3 @@ deploy:
   wait-until-deployed: true
   on:
     branch: assignment7
-

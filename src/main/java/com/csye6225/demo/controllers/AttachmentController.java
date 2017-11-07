@@ -63,16 +63,10 @@ public class AttachmentController {
     @PostMapping(value = "/attachments")
     public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment1, @PathVariable(name="id")String id, HttpServletResponse response)throws Exception{
 
-
-<<<<<<< HEAD
-        String bucketName="csye6225-fall2017-zhangmengf.me";
-        AmazonS3 amazonS3=new AmazonS3Client(new BasicAWSCredentials("AKIAISPYBWRY3NPC2SAA","Y7Aw7Mm1abJkNMVAaxo4dq9kN8eHYPEUVV6zuuRR"));
-=======
         Properties prop =new Properties();
         prop.load(new FileInputStream("/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application-aws.properties"));
         String bucketName=prop.getProperty("bucketName");
         AmazonS3 amazonS3=new AmazonS3Client();
->>>>>>> assignment7
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;

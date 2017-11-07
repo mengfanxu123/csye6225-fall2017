@@ -63,7 +63,6 @@ public class AttachmentController {
     @PostMapping(value = "/attachments")
     public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment1, @PathVariable(name="id")String id, HttpServletResponse response)throws Exception{
 
-
         Properties prop =new Properties();
         prop.load(new FileInputStream("/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application-aws.properties"));
         String bucketName=prop.getProperty("bucketName");

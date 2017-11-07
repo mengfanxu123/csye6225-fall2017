@@ -1,17 +1,46 @@
 language: java
-
 jdk:
-  - oraclejdk8
-
-sudo: true
+- oraclejdk8
+sudo: false
 install: true
-
 before_script:
- - chmod +x gradlew
+- chmod +x gradlew
 script:
-  - ./gradlew war
-  - gradle -Dtest.single=DemoApplicationTests test
-notifications:
-  email:
-    recipients:
-      - zhang.mengf@husky.neu.edu
+- "./gradlew war"
+- gradle -Dtest.single=DemoApplicationTests test
+after_success:
+- mkdir codedeploy
+- zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/libs/ROOT.war appspec.yml restartTomcat.sh
+- ls -al
+- mv csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
+- ls -al
+- pwd
+- cd codedeploy
+- ls -al
+- pwd
+before_deploy:
+- cd ..
+deploy:
+- provider: s3
+  access_key_id: AKIAI7LGDLHDJDQJ3EDA
+  secret_access_key:
+    secure: du+gQILEsZsrzG9lPH5NxFqTtVNqvv9js2QLQ2qJbZj9COz47t8Za6IpcygLMZSAFAanwu/eS+JUwf2qGLIH57WYFxMQdXMkQgGsIUwD+ZN2LpawMQl3uj/tQSe5QVmYea0YLF6lDkObZupFVn6/LxARh+34g+xtAEvuVqYVy8uLZzDSCN6KkJJTOAmGviLTNNd1GENT3cjBjj7SfTJuU9rtAD4noYJiDDTB6tmjMg5q6opxU4cmagCLDrDw7rBUSu92gNDeWhKQH1yWa//24527KDmMQC7Tfb6Vg8Sb4rUmhP+uymkLyvayXv86flolcUyEDZtuV6Ua/euTjZebJdkBe4Wz2l9fq//aFfPB7/0UGtgNT77nCQD9K8W6fb1vZid3hGtJllBfaYpiTcby0DcxZ6m4Dx84ZaxQd9z72zyUAod4I8sOBCOWTY93ujqJaF8t6XLOe8XjS7yK2vaPCdk6vPV0Xr/euD0XauXd8OS8MYl0Eh7k5XCyT6JCTQttHwB8SAqC6wSaTYOdBBG9wprIwrRpqX/ot2362KHVIOQ6v9fA/6xo1pT9G1h/ccemhqcsoHi6C1uIxPUKpS+LTcdrl3s+Y2qDi2lhVlyq1/URYwjqoydtBPxXusf100OxfitM1hhLNqzfSouJyZ+WYU9sT2wLA/DRov79WOk3zj0=
+  local_dir: codedeploy
+  bucket: code-deploy.csye6225-fall2017-rongye.me
+  region: us-east-1
+  skip_cleanup: true
+  on:
+    branch: assignment7
+- provider: codedeploy
+  access_key_id: AKIAI7LGDLHDJDQJ3EDA
+  secret_access_key:
+    secure: du+gQILEsZsrzG9lPH5NxFqTtVNqvv9js2QLQ2qJbZj9COz47t8Za6IpcygLMZSAFAanwu/eS+JUwf2qGLIH57WYFxMQdXMkQgGsIUwD+ZN2LpawMQl3uj/tQSe5QVmYea0YLF6lDkObZupFVn6/LxARh+34g+xtAEvuVqYVy8uLZzDSCN6KkJJTOAmGviLTNNd1GENT3cjBjj7SfTJuU9rtAD4noYJiDDTB6tmjMg5q6opxU4cmagCLDrDw7rBUSu92gNDeWhKQH1yWa//24527KDmMQC7Tfb6Vg8Sb4rUmhP+uymkLyvayXv86flolcUyEDZtuV6Ua/euTjZebJdkBe4Wz2l9fq//aFfPB7/0UGtgNT77nCQD9K8W6fb1vZid3hGtJllBfaYpiTcby0DcxZ6m4Dx84ZaxQd9z72zyUAod4I8sOBCOWTY93ujqJaF8t6XLOe8XjS7yK2vaPCdk6vPV0Xr/euD0XauXd8OS8MYl0Eh7k5XCyT6JCTQttHwB8SAqC6wSaTYOdBBG9wprIwrRpqX/ot2362KHVIOQ6v9fA/6xo1pT9G1h/ccemhqcsoHi6C1uIxPUKpS+LTcdrl3s+Y2qDi2lhVlyq1/URYwjqoydtBPxXusf100OxfitM1hhLNqzfSouJyZ+WYU9sT2wLA/DRov79WOk3zj0=
+  bucket: code-deploy.csye6225-fall2017-rongye.me
+  key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
+  bundle_type: zip
+  application: csye6225-fall2017
+  deployment_group: csye6225-fall2017
+  region: us-east-1
+  wait-until-deployed: true
+  on:
+    branch: assignment7

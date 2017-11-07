@@ -30,7 +30,7 @@ deploy:
   region: us-east-1
   skip_cleanup: true
   on:
-    branch: assignment7
+    branch: assignment8
 - provider: codedeploy
   access_key_id: AKIAJZEYT3624WSNBEGA
   secret_access_key: 

@@ -1,23 +1,30 @@
 package com.csye6225.demo.controllers;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.*;
 
-import java.io.FileInputStream;
 import java.util.List;
-import java.util.Properties;
 
 public class Test {
     public static void main(String[] args) {
-        Properties prop =new Properties();
-        try {
-            prop.load(new FileInputStream("src/main/resources/application-aws.properties"));
-            System.out.println(prop.getProperty("bucketName"));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
+        AmazonSNSClient snsClient = new AmazonSNSClient(new ClientConfiguration());
+        String topicArn="arn:aws:sns:us-east-1:179107530530:password_reset";
+
+        //subscribe to an SNS topic
+        SubscribeRequest subRequest = new SubscribeRequest(topicArn, "email","xu.shua@husky.neu.edu");
+        snsClient.subscribe(subRequest);
+
+
+//publish to an SNS topic
+        String msg = "Reset Password Successfully";
+        PublishRequest publishRequest = new PublishRequest(topicArn, msg);
+        PublishResult publishResult = snsClient.publish(publishRequest);
     }
 }

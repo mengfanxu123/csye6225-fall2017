@@ -7,6 +7,9 @@ package com.csye6225.demo.controllers;
  *  YeHui Rong       001957596 rong.ye@husky.neu.edu
  */
 
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.model.VerifyEmailAddressRequest;
 import com.csye6225.demo.auth.BCryptPasswordEncoderBean;
 import com.csye6225.demo.pojo.User;
 import com.csye6225.demo.repository.UserRepository;
@@ -45,6 +48,11 @@ public class UserController {
         } else {
             User newuser = new User();
             BCryptPasswordEncoderBean bCryptPasswordEncoder=new BCryptPasswordEncoderBean();
+
+            AmazonSimpleEmailService client = new AmazonSimpleEmailServiceClient();
+            VerifyEmailAddressRequest verifyEmailAddressRequest=new VerifyEmailAddressRequest();
+            verifyEmailAddressRequest.setEmailAddress(user.getEmail());
+            client.verifyEmailAddress(verifyEmailAddressRequest);
 
             String passwordSafe= bCryptPasswordEncoder.bCryptPasswordEncoder().encode(user.getPassword());
             newuser.setEmail(user.getEmail());
@@ -88,6 +96,5 @@ public class UserController {
         }
 
     }
-
 
 }

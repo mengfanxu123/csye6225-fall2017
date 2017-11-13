@@ -21,6 +21,9 @@ read stackname
 
 echo "Enter The S3 Name:"
 read S3Name
-aws cloudformation create-stack --stack-name ${stackname} --template-body file://./template.json --parameters ParameterKey=ParamVpcID,ParameterValue=${VPC_ID} ParameterKey=ParamS3Name,ParameterValue=${S3Name} ParameterKey=ParamSubnetId1,ParameterValue=${SUBNET_ID1} ParameterKey=ParamSubnetId2,ParameterValue=${SUBNET_ID2} ParameterKey=ParamSubnetId3,ParameterValue=${SUBNET_ID3} ParameterKey=ParamSubnetId4,ParameterValue=${SUBNET_ID4}&&
+
+echo "Enter The S3 Name2:"
+read S3Name2
+aws cloudformation create-stack --stack-name ${stackname} --template-body file://./template.json --parameters ParameterKey=ParamVpcID,ParameterValue=${VPC_ID} ParameterKey=ParamS3Name,ParameterValue=${S3Name} ParameterKey=ParamS3Name,ParameterValue=${S3Name2} ParameterKey=ParamSubnetId1,ParameterValue=${SUBNET_ID1} ParameterKey=ParamSubnetId2,ParameterValue=${SUBNET_ID2} ParameterKey=ParamSubnetId3,ParameterValue=${SUBNET_ID3} ParameterKey=ParamSubnetId4,ParameterValue=${SUBNET_ID4} --capabilities CAPABILITY_NAMED_IAM&&
 
 echo done

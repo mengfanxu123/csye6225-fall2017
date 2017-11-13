@@ -6,22 +6,13 @@ install: true
 before_script:
 - chmod +x gradlew
 script:
-<<<<<<< HEAD
-  - ./gradlew war
-  - gradle -Dtest.single=DemoApplicationTests test
-notifications:
-  email:
-    recipients:
-      - mengfanxu0802@gmail.com
-=======
 - "./gradlew war"
 - gradle -Dtest.single=DemoApplicationTests test
 after_success:
 - mkdir codedeploy
-- zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/lib/libs/test-1.0.0.war
-  appspec.yml restartTomcat.sh
+- zip -r csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip build/libs/ROOT.war appspec.yml restartTomcat.sh
 - ls -al
-- mv -csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
+- mv csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip codedeploy/
 - ls -al
 - pwd
 - cd codedeploy
@@ -31,20 +22,20 @@ before_deploy:
 - cd ..
 deploy:
 - provider: s3
-  access_key_id: AKIAJJK3DZ4DJRAQFZRQ
-  secret_access_key:
-    secure: lHSqZTJ1h+/w+FVHvOPathD4WBLmMqtr1dGRH0aA0VLTJpW7+ybvLYYgqjXM0lSndappvolQ6T6x0lzXbKrggQ3Kvn62+WWWgigkexvF8T5gRZ8HSumaB40dA4O1WURSXIcE9oaPrABzkau1KMTl+0lZIWgJ1u0aoUP1Kkirq6Hujt2MngnTuVB7sz3IJp7BwiHPUiW99RNG3xmRrcXbiiryhD/KSAyKZ7ThGeCiSzRi0RaBwBfuZOlDYghP5vpBJd2f3/TZiMsIO0BrQdMoMdhTPCsCtMwBTn3qNulAwdU2WzOaEAm9Z8op+NeRHa1578OXjBCiobDXn/Je4rJg8pBOpDRx2lSu6IB04NaFwEsZlLCdbNocql/ShFOSFWbvB4E6LProcWgctFWfMHym6dKTrw0571nNkn3f3506s5zo/IOTsOVbWUZpQZJoSRktu0wk/zHVGnKNqrLVUe0ykw3I/Cz/30i9/aGGak2TFYqrSHRMmY0mOxSAZ1IbjsA7mansYv49CLaMnk0HUXe+WRVlZefwI37uO+qxa+z1/GuqBjOwQ38tAcbWUDDNCTB2ms2qtRXjVJUJuZrXRlX369WdRBFl1/r3RslPB3mo1uPFWVVmokrPY4sEWEv4d3GzF3Zx3TgrJAbTQC/BAajWGpUekwX5Dhhc2HQzkrJw030=
+  access_key_id: AKIAJZEYT3624WSNBEGA
+  secret_access_key: 
+    secure: eY5rwS5HlHW/XFH6znqnDsCMxadTBoZOeOtJH600kHUnWGm34By01l5oQ8XKfktqOrEuGW6UtY9vQCr5WFhGWyKRszCifV6pGiD0GHVEjwMfwwHJE/QWY9NKwXeIqU6v8+NuEKfc5LWRS5+NFgsDcxA7QlkR2q+bKJ68H5kJ99rfGGyM4j3XrITRGRjsQbPCX1trYFze9i65ZloOOMaC8GxCxEAGi+sJAqB2t/7vRxjhbhhcYxFycbMhgpUTCorwyfeszpViPD6Z8EuHZlmv/wMuGX/rXUNeDRTR8DKO7ZpPYENLggDx9/OtEKKuHeRaHRHEiqRr3HR9iTZqplBvfQE24ugR4Esc71tI8j2CvT6giT6AjkTE3rrmzUGp2vdWlv3K2HOoOPTfK56o5y4r7zD6tw6E72uGN3fvE1MFNgh7pTz4zTMlHnO2hT8zM7AxmhY2C24UOLnlIigpMYvycBy488x0iiT20+wcUgVgus4k8mE8YJl/fATnFjaLEOZ+c4yptdSvy6i8kJKF1xhQ8h2EfiikMULXm22gUiINZkcMgCOahRolj+IowseRSB+9+eZQAEsJ0BcYxtrPzHI4vgM8EbevHJ6Okc2cLnjEakeEr+ReZ8M+MuFQhlh14I9Gqh6jxBAvtJWq0rsOx7DgUYkZw/4qfeDvQNEkULtNdYQ=
   local_dir: codedeploy
-  bucket: csye6225-fall2017-xumengf.me
+  bucket: code-deploy.csye6225-fall2017-xushua.me
   region: us-east-1
   skip_cleanup: true
   on:
-    branch: assignment7
+    branch: assignment8
 - provider: codedeploy
-  access_key_id: AKIAJJK3DZ4DJRAQFZRQ
-  secret_access_key:
-    secure: lHSqZTJ1h+/w+FVHvOPathD4WBLmMqtr1dGRH0aA0VLTJpW7+ybvLYYgqjXM0lSndappvolQ6T6x0lzXbKrggQ3Kvn62+WWWgigkexvF8T5gRZ8HSumaB40dA4O1WURSXIcE9oaPrABzkau1KMTl+0lZIWgJ1u0aoUP1Kkirq6Hujt2MngnTuVB7sz3IJp7BwiHPUiW99RNG3xmRrcXbiiryhD/KSAyKZ7ThGeCiSzRi0RaBwBfuZOlDYghP5vpBJd2f3/TZiMsIO0BrQdMoMdhTPCsCtMwBTn3qNulAwdU2WzOaEAm9Z8op+NeRHa1578OXjBCiobDXn/Je4rJg8pBOpDRx2lSu6IB04NaFwEsZlLCdbNocql/ShFOSFWbvB4E6LProcWgctFWfMHym6dKTrw0571nNkn3f3506s5zo/IOTsOVbWUZpQZJoSRktu0wk/zHVGnKNqrLVUe0ykw3I/Cz/30i9/aGGak2TFYqrSHRMmY0mOxSAZ1IbjsA7mansYv49CLaMnk0HUXe+WRVlZefwI37uO+qxa+z1/GuqBjOwQ38tAcbWUDDNCTB2ms2qtRXjVJUJuZrXRlX369WdRBFl1/r3RslPB3mo1uPFWVVmokrPY4sEWEv4d3GzF3Zx3TgrJAbTQC/BAajWGpUekwX5Dhhc2HQzkrJw030=
-  bucket: csye6225-fall2017-xumengf.me
+  access_key_id: AKIAJZEYT3624WSNBEGA
+  secret_access_key: 
+    secure: eY5rwS5HlHW/XFH6znqnDsCMxadTBoZOeOtJH600kHUnWGm34By01l5oQ8XKfktqOrEuGW6UtY9vQCr5WFhGWyKRszCifV6pGiD0GHVEjwMfwwHJE/QWY9NKwXeIqU6v8+NuEKfc5LWRS5+NFgsDcxA7QlkR2q+bKJ68H5kJ99rfGGyM4j3XrITRGRjsQbPCX1trYFze9i65ZloOOMaC8GxCxEAGi+sJAqB2t/7vRxjhbhhcYxFycbMhgpUTCorwyfeszpViPD6Z8EuHZlmv/wMuGX/rXUNeDRTR8DKO7ZpPYENLggDx9/OtEKKuHeRaHRHEiqRr3HR9iTZqplBvfQE24ugR4Esc71tI8j2CvT6giT6AjkTE3rrmzUGp2vdWlv3K2HOoOPTfK56o5y4r7zD6tw6E72uGN3fvE1MFNgh7pTz4zTMlHnO2hT8zM7AxmhY2C24UOLnlIigpMYvycBy488x0iiT20+wcUgVgus4k8mE8YJl/fATnFjaLEOZ+c4yptdSvy6i8kJKF1xhQ8h2EfiikMULXm22gUiINZkcMgCOahRolj+IowseRSB+9+eZQAEsJ0BcYxtrPzHI4vgM8EbevHJ6Okc2cLnjEakeEr+ReZ8M+MuFQhlh14I9Gqh6jxBAvtJWq0rsOx7DgUYkZw/4qfeDvQNEkULtNdYQ=
+  bucket: code-deploy.csye6225-fall2017-xushua.me
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip
   application: csye6225-fall2017
@@ -52,6 +43,4 @@ deploy:
   region: us-east-1
   wait-until-deployed: true
   on:
-    branch: assignment7
-
->>>>>>> 7259f91e6a8a81affc4c29e4b8fc79ed0d142e99
+    branch: assignment8

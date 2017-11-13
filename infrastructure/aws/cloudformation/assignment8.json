@@ -1,0 +1,51 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
+  "Resources": {
+    "LambdaSnsExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+          "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+        ],
+        "RoleName": "lambda-sns-execution-role11"
+      }
+    },
+    "LambdaSnsExecutionProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "LambdaSnsExecutionRole"
+          }
+        ]
+      }
+    },
+    "SNSTopic":{
+      "Type":"AWS::SNS::Topic",
+      "Properties":{
+        "TopicName":"password_reset11"
+      }
+    }
+  }
+}

@@ -2,50 +2,166 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
   "Resources": {
-    "LambdaSnsExecutionRole": {
-      "Type": "AWS::IAM::Role",
+    "EC2Instance": {
+      "Type": "AWS::EC2::Instance",
       "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "ec2.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Path": "/",
-        "ManagedPolicyArns": [
-          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-          "arn:aws:iam::aws:policy/AmazonSESFullAccess"
-        ],
-        "RoleName": "lambda-sns-execution-role11"
-      }
-    },
-    "LambdaSnsExecutionProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Path": "/",
-        "Roles": [
+        "ImageId": "ami-cd0f5cb6",
+        "InstanceType": "t2.micro",
+        "SecurityGroupIds": [
           {
-            "Ref": "LambdaSnsExecutionRole"
+            "Fn::GetAtt": [
+              "EC2InstanceSG",
+              "GroupId"
+            ]
           }
-        ]
+        ],
+        "KeyName": "MyKeyPair",
+        "SubnetId": {
+          "Ref": "ParamSubnetId1"
+        },
+        "Tags": [
+          {
+            "Key": "NAME",
+            "Value": "CSYE6225"
+          }
+        ],
+        "IamInstanceProfile" :{
+          "Ref":"EC2InstanceProfile"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -v\n",
+                "sudo apt-get update\n",
+                "sudo apt-get -y install default-jre\n",
+                "sudo chmod 777 /etc/environment\n",
+                "echo \"JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\" >> /etc/environment\n",
+                "source /etc/environment\n",
+                "echo $JAVA_HOME\n",
+                "sudo apt-get -y install tomcat8\n",
+                "sudo service tomcat8 start\n",
+                "sudo service tomcat8 status\n",
+                "sudo apt-get update\n",
+                "sudo apt-get -y install ruby\n",
+                "sudo apt-get -y install wget\n",
+                "cd /home/ubuntu\n",
+                "wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install\n",
+                "chmod +x ./install\n",
+                "sudo ./install auto\n",
+                "sudo service codedeploy-agent start\n",
+                "sudo service codedeploy-agent status\n",
+                "cd /usr/share/tomcat8/bin",
+                "sudo touch setenv.sh",
+                "sudo chmod 700 setenv.sh",
+                "sudo echo '#!/bin/sh'>>setenv.sh",
+                {
+                  "Fn::Join":["",[
+                    "echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.url=jdbc:mysql://",
+                    {"Fn::GetAtt":[
+                      "DBInstance","Endpoint.Address"]},
+                    ":3306/csye6225\"'>>setenv.sh"
+                  ]]
+                },
+                "echo 'JAVA_OPT=\"$JAVA_OPTS-Dspring.datasource.username=csye6225master\"'>>setenv.sh",
+                "echo 'JAVA_OPT=\"$JAVA_OPTS-Dspring.datasource.password=csye6225password\"'>>setenv.sh",
+                "sudo chmod +x setenv.sh",
+                "sudo chown tomcat8:tomcat8 setenv.sh"
+                "cd /var/lib/tomcat8/webapps",
+                "sudo rm -r ROOT"
+              ]
+            ]
+          }
+        }
       }
     },
-    "SNSTopic":{
-      "Type":"AWS::SNS::Topic",
-      "Properties":{
-        "TopicName":"password_reset11"
+    "EC2InstanceSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Sample EC2Instabce security group",
+        "GroupName": "csye6225-webapp",
+        "VpcId": {
+          "Ref": "ParamVpcID"
+        }
       }
+    },
+    "RDSSG": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "Sample RDS security group",
+        "EC2VpcId": {
+          "Ref": "ParamVpcID"
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule1": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule3": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "443",
+        "ToPort": "443",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "-1",
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    }
+  },
+  "Parameters": {
+    "ParamVpcID": {
+      "Type": "String"
+    },
+    "ParamSubnetId1": {
+      "Type": "String"
     }
   }
 }

@@ -62,7 +62,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Sample EC2Instabce security group",
-        "GroupName": "csye6225-webapp11",
+        "GroupName": "csye6225-webapp",
         "VpcId": {
           "Ref": "ParamVpcID"
         }
@@ -170,7 +170,7 @@
           "ReadCapacityUnits": "5",
           "WriteCapacityUnits": "5"
         },
-        "TableName": "csye622511"
+        "TableName": "csye6225"
       }
     },
     "myDBSubnetGroup": {
@@ -202,9 +202,9 @@
         "MultiAZ": "false",
         "StorageType": "standard",
         "AllocatedStorage": "10",
-        "DBInstanceIdentifier": "csye6225-fall201711",
-        "MasterUsername": "csye6225master11",
-        "MasterUserPassword": "csye6225password11",
+        "DBInstanceIdentifier": "csye6225-fall2017",
+        "MasterUsername": "csye6225master",
+        "MasterUserPassword": "csye6225password",
         "DBSubnetGroupName": {
           "Ref": "myDBSubnetGroup"
         },
@@ -214,23 +214,7 @@
           }
         ],
         "PubliclyAccessible": "false",
-        "DBName": "csye622511"
-      }
-    },
-    "MyS3Bucket1": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "BucketName": {
-          "Ref": "ParamS3Name"
-        }
-      }
-    },
-    "MyS3Bucket2": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "BucketName": {
-          "Ref": "ParamS3Name2"
-        }
+        "DBName": "csye6225"
       }
     },
     "CodeDeployEC2ServiceRole": {
@@ -248,13 +232,13 @@
         },
         "Path": "/",
         "ManagedPolicyArns":["arn:aws:iam::aws:policy/AmazonS3FullAccess"],
-        "RoleName": "CodeDeployEC2ServiceRole11"
+        "RoleName": "CodeDeployEC2ServiceRole"
       }
     },
     "CodeDeployEC2S3": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "CodeDeploy-EC2-S311",
+        "PolicyName": "CodeDeploy-EC2-S3",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -301,7 +285,7 @@
         },
         "Path": "/",
         "ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"],
-        "RoleName":"CodeDeployServiceRole111"
+        "RoleName":"CodeDeployServiceRole"
       }
     },
     "CodeDeployProfile": {
@@ -317,7 +301,7 @@
     "TravisUploadToS3": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": "Travis-Upload-To-S311",
+        "ManagedPolicyName": "Travis-Upload-To-S3",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -337,7 +321,7 @@
     "TravisCodeDeploy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": "Travis-Code-Deploy11",
+        "ManagedPolicyName": "Travis-Code-Deploy",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -347,9 +331,9 @@
                 "codedeploy:RegisterApplicationRevision",
                 "codedeploy:GetApplicationRevision"
               ],
-              "Resource": [
-                "arn:aws:codedeploy:us-east-1:179107530530:application:csye6225-fall2017"
-              ]
+              "Resource": {"Fn::Join":
+              ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":application:csye6225-fall2017"
+              ]]}
             },
             {
               "Effect": "Allow",
@@ -367,24 +351,69 @@
                 "codedeploy:GetDeploymentConfig"
               ],
               "Resource": [
-                "arn:aws:codedeploy:us-east-1:179107530530:deploymentconfig:CodeDeployDefault.OneAtATime",
-                "arn:aws:codedeploy:us-east-1:179107530530:deploymentconfig:CodeDeployDefault.HalfAtATime",
-                "arn:aws:codedeploy:us-east-1:179107530530:deploymentconfig:CodeDeployDefault.AllAtOnce"
+                {"Fn::Join":
+                ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":deploymentconfig:CodeDeployDefault.OneAtATime"
+                ]]},
+                {"Fn::Join":
+                ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":deploymentconfig:CodeDeployDefault.HalfAtATime"
+                ]]},
+                {"Fn::Join":
+                ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":CodeDeployDefault.AllAtOnce"
+                ]]}
               ]
             }
           ]
         }
       }
+    },
+    "LambdaSnsExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+          "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+        ],
+        "RoleName": "lambda-sns-execution-role"
+      }
+    },
+    "LambdaSnsExecutionProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "LambdaSnsExecutionRole"
+          }
+        ]
+      }
+    },
+    "SNSTopic":{
+      "Type":"AWS::SNS::Topic",
+      "Properties":{
+        "TopicName":"password_reset11"
+      }
     }
   },
   "Parameters": {
     "ParamVpcID": {
-      "Type": "String"
-    },
-    "ParamS3Name": {
-      "Type": "String"
-    },
-    "ParamS3Name2": {
       "Type": "String"
     },
     "ParamSubnetId1": {

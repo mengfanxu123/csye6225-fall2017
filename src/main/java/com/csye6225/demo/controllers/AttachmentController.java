@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.regions.*;
+import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.csye6225.demo.repository.AttachmentRpository;
 import com.csye6225.demo.repository.TaskRepository;
@@ -63,10 +64,17 @@ public class AttachmentController {
     @PostMapping(value = "/attachments")
     public  @ResponseBody Attachment addFile(@RequestBody Attachment attachment1, @PathVariable(name="id")String id, HttpServletResponse response)throws Exception{
 
-        Properties prop =new Properties();
-        prop.load(new FileInputStream("/src/main/resources/application-aws.properties"));
-        String bucketName=prop.getProperty("bucketName");
         AmazonS3 amazonS3=new AmazonS3Client();
+        List<Bucket> buckets=amazonS3.listBuckets();
+        String bucketName="s";
+        int count=0;
+        for (Bucket b:buckets) {
+            bucketName=b.getName();
+            count++;
+            if(count==2){
+                break;
+            }
+        }
         String key = "MyFile"+ UUID.randomUUID();
 
         String url="https://s3.amazonaws.com/"+bucketName+"/"+key;

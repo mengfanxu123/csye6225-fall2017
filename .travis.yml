@@ -24,7 +24,7 @@ deploy:
 - provider: s3
   access_key_id: $access_key_id
   secret_access_key: 
-    secure: $secure
+    secure: eY5rwS5HlHW/XFH6znqnDsCMxadTBoZOeOtJH600kHUnWGm34By01l5oQ8XKfktqOrEuGW6UtY9vQCr5WFhGWyKRszCifV6pGiD0GHVEjwMfwwHJE/QWY9NKwXeIqU6v8+NuEKfc5LWRS5+NFgsDcxA7QlkR2q+bKJ68H5kJ99rfGGyM4j3XrITRGRjsQbPCX1trYFze9i65ZloOOMaC8GxCxEAGi+sJAqB2t/7vRxjhbhhcYxFycbMhgpUTCorwyfeszpViPD6Z8EuHZlmv/wMuGX/rXUNeDRTR8DKO7ZpPYENLggDx9/OtEKKuHeRaHRHEiqRr3HR9iTZqplBvfQE24ugR4Esc71tI8j2CvT6giT6AjkTE3rrmzUGp2vdWlv3K2HOoOPTfK56o5y4r7zD6tw6E72uGN3fvE1MFNgh7pTz4zTMlHnO2hT8zM7AxmhY2C24UOLnlIigpMYvycBy488x0iiT20+wcUgVgus4k8mE8YJl/fATnFjaLEOZ+c4yptdSvy6i8kJKF1xhQ8h2EfiikMULXm22gUiINZkcMgCOahRolj+IowseRSB+9+eZQAEsJ0BcYxtrPzHI4vgM8EbevHJ6Okc2cLnjEakeEr+ReZ8M+MuFQhlh14I9Gqh6jxBAvtJWq0rsOx7DgUYkZw/4qfeDvQNEkULtNdYQ=
   local_dir: codedeploy
   bucket: $bucket
   region: us-east-1

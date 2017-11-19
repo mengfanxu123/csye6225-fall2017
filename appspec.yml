@@ -4,10 +4,6 @@ os: linux
 files:
   - source: ./appspec.yml
     destination: /home/ubuntu
-  - source: ./awslogs.conf
-    destination: /home/ubuntu
-  - source: ./awslogs.service
-    destination: /etc/systemd/system
   - source: ./restartTomcat.sh
     destination: /home/ubuntu
   - source: ./build/libs/ROOT.war

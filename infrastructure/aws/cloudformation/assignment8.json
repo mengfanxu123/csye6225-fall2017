@@ -32,36 +32,9 @@
               [
                 "#!/bin/bash -v\n",
                 "sudo apt-get update\n",
-                "sudo apt-get -y install default-jre\n",
-                "sudo chmod 777 /etc/environment\n",
-                "echo \"JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\" >> /etc/environment\n",
-                "source /etc/environment\n",
-                "echo $JAVA_HOME\n",
-                "sudo apt-get -y install tomcat8\n",
-                "sudo service tomcat8 start\n",
-                "sudo service tomcat8 status\n",
-                "sudo apt-get update\n",
-                "sudo apt-get -y install ruby\n",
-                "sudo apt-get -y install wget\n",
-                "cd /home/ubuntu\n",
-                "wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install\n",
-                "chmod +x ./install\n",
-                "sudo ./install auto\n",
-                "sudo service codedeploy-agent start\n",
-                "sudo service codedeploy-agent status\n",
-
-                "cd /usr/share/tomcat8/bin\n",
-                "sudo touch setenv.sh\n",
-                "sudo chmod 777 setenv.sh\n",
-                "sudo echo '#!/bin/sh'>>setenv.sh\n",
-                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.url=jdbc:mysql://:3306/csye6225\"'>>setenv.sh\n",
-                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.username=csye6225master\"'>>setenv.sh\n",
-                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.password=csye6225password\"'>>setenv.sh\n",
-                "sudo chmod +x setenv.sh\n",
-                "sudo chown tomcat8:tomcat8 setenv.sh\n",
-                "cd\n",
-                "cd /var/lib/tomcat8/webapps\n",
-                "sudo rm -r ROOT\n"
+                "sudo apt-get install python -y\n",
+                "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
+                "sudo python ./awslogs-agent-setup.py --region us-east-1\n"
               ]
             ]
           }

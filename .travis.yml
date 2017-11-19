@@ -23,7 +23,7 @@ before_deploy:
 deploy:
 - provider: s3
   access_key_id: $access_key_id
-  secret_access_key: hghgfgfhfgh
+  deploy.secret_access_key: $secure
   local_dir: codedeploy
   bucket: $bucket
   region: us-east-1
@@ -32,7 +32,7 @@ deploy:
     branch: assignment9
 - provider: codedeploy
   access_key_id: $access_key_id
-  secret_access_key: $secure
+  deploy.secret_access_key: $secure
   bucket: $bucket
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip

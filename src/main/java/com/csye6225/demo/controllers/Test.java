@@ -13,19 +13,13 @@ import java.util.List;
 
 public class Test {
     public static void main(String[] args) {
+        String msg = "xushua@husky.neu.edu";
+        AmazonSNSClient snsClient = new AmazonSNSClient(new ClientConfiguration());
 
-        AmazonS3 amazonS3=new AmazonS3Client();
-        List<Bucket> buckets=amazonS3.listBuckets();
-        String name="s";
-        int count=0;
-        for (Bucket b:buckets) {
-            name=b.getName();
-            count++;
-            if(count==2){
 
-                break;
-            }
-        }
-        System.out.print(name);
+        String topicArn=snsClient.createTopic("password_reset").getTopicArn();
+       // PublishRequest publishRequest = new PublishRequest(topicArn, msg);
+        //PublishResult publishResult = snsClient.publish(publishRequest);
+        System.out.print(topicArn);
     }
 }

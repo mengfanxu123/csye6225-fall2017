@@ -6,8 +6,6 @@ files:
     destination: /home/ubuntu
   - source: ./restartTomcat.sh
     destination: /home/ubuntu
-  - source: ./infrastructure/aws/cloudwatch/awslogs.conf
-    destination: /var/awslogs/etc/awslogs.conf
   - source: ./build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
     

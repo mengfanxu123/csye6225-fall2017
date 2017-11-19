@@ -30,7 +30,7 @@ deploy:
   region: us-east-1
   skip_cleanup: true
   on:
-    branch: assignment8
+    branch: assignment9
 - provider: codedeploy
   access_key_id: AKIAJZEYT3624WSNBEGA
   secret_access_key: 
@@ -43,4 +43,4 @@ deploy:
   region: us-east-1
   wait-until-deployed: true
   on:
-    branch: assignment8
+    branch: assignment9

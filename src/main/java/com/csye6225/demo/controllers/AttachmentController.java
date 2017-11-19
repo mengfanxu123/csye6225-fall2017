@@ -111,10 +111,17 @@ public class AttachmentController {
     @DeleteMapping("/attachments/{idAttachments}")
     public  void deleteFile(@PathVariable(name="idAttachments")String idAttachments,@PathVariable(name="id")String id,HttpServletResponse response)throws Exception{
 
-        Properties prop =new Properties();
-        prop.load(new FileInputStream("/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application-aws.properties"));
-        String bucketName=prop.getProperty("bucketName");
         AmazonS3 amazonS3=new AmazonS3Client();
+        List<Bucket> buckets=amazonS3.listBuckets();
+        String bucketName="s";
+        int count=0;
+        for (Bucket b:buckets) {
+            bucketName=b.getName();
+            count++;
+            if(count==2){
+                break;
+            }
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user=new User();

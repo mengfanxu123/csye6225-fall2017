@@ -52,24 +52,25 @@
                 "sudo ./install auto\n",
                 "sudo service codedeploy-agent start\n",
                 "sudo service codedeploy-agent status\n",
-                "cd /usr/share/tomcat8/bin",
-                "sudo touch setenv.sh",
-                "sudo chmod 700 setenv.sh",
-                "sudo echo '#!/bin/sh'>>setenv.sh",
+                "cd /usr/share/tomcat8/bin\n",
+                "sudo touch setenv.sh\n",
+                "sudo chmod 777 setenv.sh\n",
+                "sudo echo '#!/bin/sh'>>setenv.sh\n",
                 {
                   "Fn::Join":["",[
-                    "echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.url=jdbc:mysql://",
+                    "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.url=jdbc:mysql://",
                     {"Fn::GetAtt":[
                       "DBInstance","Endpoint.Address"]},
-                    ":3306/csye6225\"'>>setenv.sh"
+                    ":3306/csye6225\"'>>setenv.sh\n"
                   ]]
                 },
-                "echo 'JAVA_OPT=\"$JAVA_OPTS-Dspring.datasource.username=csye6225master\"'>>setenv.sh",
-                "echo 'JAVA_OPT=\"$JAVA_OPTS-Dspring.datasource.password=csye6225password\"'>>setenv.sh",
-                "sudo chmod +x setenv.sh",
-                "sudo chown tomcat8:tomcat8 setenv.sh"
-                "cd /var/lib/tomcat8/webapps",
-                "sudo rm -r ROOT"
+                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.username=csye6225master\"'>>setenv.sh\n",
+                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.password=csye6225password\"'>>setenv.sh\n",
+                "sudo chmod +x setenv.sh\n",
+                "sudo chown tomcat8:tomcat8 setenv.sh\n",
+                "cd /home/ubuntu\n",
+                "cd /var/lib/tomcat8/webapps\n",
+                "sudo rm -r ROOT\n"
               ]
             ]
           }

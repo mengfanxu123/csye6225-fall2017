@@ -51,7 +51,26 @@
                 "chmod +x ./install\n",
                 "sudo ./install auto\n",
                 "sudo service codedeploy-agent start\n",
-                "sudo service codedeploy-agent status\n"
+                "sudo service codedeploy-agent status\n",
+                "cd /usr/share/tomcat8/bin\n",
+                "sudo touch setenv.sh\n",
+                "sudo chmod 777 setenv.sh\n",
+                "sudo echo '#!/bin/sh'>>setenv.sh\n",
+                {
+                  "Fn::Join":["",[
+                    "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://",
+                    {"Fn::GetAtt":[
+                      "DBInstance","Endpoint.Address"]},
+                    ":3306/csye6225\"'>>setenv.sh\n"
+                  ]]
+                },
+                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=csye6225master\"'>>setenv.sh\n",
+                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=csye6225password\"'>>setenv.sh\n",
+                "sudo chmod +x setenv.sh\n",
+                "sudo chown tomcat8:tomcat8 setenv.sh\n",
+                "cd /home/ubuntu\n",
+                "cd /var/lib/tomcat8/webapps\n",
+                "sudo rm -r ROOT\n"
               ]
             ]
           }
@@ -231,7 +250,7 @@
           }]
         },
         "Path": "/",
-        "ManagedPolicyArns":["arn:aws:iam::aws:policy/AmazonS3FullAccess"],
+        "ManagedPolicyArns":["arn:aws:iam::aws:policy/AmazonS3FullAccess","arn:aws:iam::aws:policy/AdministratorAccess"],
         "RoleName": "CodeDeployEC2ServiceRole"
       }
     },
@@ -408,7 +427,7 @@
     "SNSTopic":{
       "Type":"AWS::SNS::Topic",
       "Properties":{
-        "TopicName":"password_reset11"
+        "TopicName":"password_reset"
       }
     }
   },

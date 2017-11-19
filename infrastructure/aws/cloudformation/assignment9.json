@@ -250,7 +250,7 @@
           }]
         },
         "Path": "/",
-        "ManagedPolicyArns":["arn:aws:iam::aws:policy/AmazonS3FullAccess"],
+        "ManagedPolicyArns":["arn:aws:iam::aws:policy/AmazonS3FullAccess","arn:aws:iam::aws:policy/AdministratorAccess"],
         "RoleName": "CodeDeployEC2ServiceRole"
       }
     },

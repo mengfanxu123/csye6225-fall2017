@@ -49,11 +49,11 @@
                 "sudo ./install auto\n",
                 "sudo service codedeploy-agent start\n",
                 "sudo service codedeploy-agent status\n",
+
                 "cd /usr/share/tomcat8/bin\n",
                 "sudo touch setenv.sh\n",
                 "sudo chmod 777 setenv.sh\n",
                 "sudo echo '#!/bin/sh'>>setenv.sh\n",
-
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.url=jdbc:mysql://:3306/csye6225\"'>>setenv.sh\n",
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.username=csye6225master\"'>>setenv.sh\n",
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS-Dspring.datasource.password=csye6225password\"'>>setenv.sh\n",

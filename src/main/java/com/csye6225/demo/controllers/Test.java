@@ -14,17 +14,18 @@ import java.util.List;
 public class Test {
     public static void main(String[] args) {
 
-        AmazonSNSClient snsClient = new AmazonSNSClient(new ClientConfiguration());
-        String topicArn="arn:aws:sns:us-east-1:179107530530:password_reset";
+        AmazonS3 amazonS3=new AmazonS3Client();
+        List<Bucket> buckets=amazonS3.listBuckets();
+        String name="s";
+        int count=0;
+        for (Bucket b:buckets) {
+            name=b.getName();
+            count++;
+            if(count==2){
 
-        //subscribe to an SNS topic
-        SubscribeRequest subRequest = new SubscribeRequest(topicArn, "email","xu.shua@husky.neu.edu");
-        snsClient.subscribe(subRequest);
-
-
-//publish to an SNS topic
-        String msg = "Reset Password Successfully";
-        PublishRequest publishRequest = new PublishRequest(topicArn, msg);
-        PublishResult publishResult = snsClient.publish(publishRequest);
+                break;
+            }
+        }
+        System.out.print(name);
     }
 }

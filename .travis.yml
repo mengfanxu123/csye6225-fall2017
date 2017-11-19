@@ -23,7 +23,7 @@ before_deploy:
 deploy:
 - provider: s3
   access_key_id: $access_key_id
-  secret_access_key: $secure
+  secret_access_key: hghgfgfhfgh
   local_dir: codedeploy
   bucket: $bucket
   region: us-east-1

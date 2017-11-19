@@ -4,9 +4,9 @@ os: linux
 files:
   - source: ./appspec.yml
     destination: /home/ubuntu
-  - source: ./infrastructure/aws/cloudwatch/awslogs.conf
+  - source: ./awslogs.conf
     destination: /home/ubuntu
-  - source: ./infrastructure/aws/cloudwatch/awslogs.service
+  - source: ./awslogs.service
     destination: /etc/systemd/system
   - source: ./restartTomcat.sh
     destination: /home/ubuntu

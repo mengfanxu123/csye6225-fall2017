@@ -71,7 +71,6 @@
                 "cd /home/ubuntu\n",
                 "cd /var/lib/tomcat8/webapps\n",
                 "sudo rm -r ROOT\n",
-
                 "sudo apt-get update\n",
                 "cd /home/ubuntu\n",
                 "sudo touch awslogs.conf\n",

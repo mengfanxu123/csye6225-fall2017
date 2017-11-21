@@ -1,0 +1,161 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
+  "Resources": {
+    "EC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": "ami-cd0f5cb6",
+        "InstanceType": "t2.micro",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "EC2InstanceSG",
+              "GroupId"
+            ]
+          }
+        ],
+        "KeyName": "MyKeyPair",
+        "SubnetId": {
+          "Ref": "ParamSubnetId1"
+        },
+        "Tags": [
+          {
+            "Key": "NAME",
+            "Value": "CSYE6225"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -v\n",
+                "sudo apt-get update\n",
+                "cd /home/ubuntu\n",
+                "sudo touch awslogs.conf\n",
+                "sudo chmod 777 awslogs.conf\n",
+                "sudo echo '[general]'>>awslogs.conf\n",
+                "sudo echo '[state_file = /var/awslogs/state/agent-state]'>>awslogs.conf\n",
+                "sudo echo '[[/var/log/syslog]]'>>awslogs.conf\n",
+                "sudo echo '[log_group_name = /var/log/syslog]'>>awslogs.conf\n",
+                "sudo echo '[log_stream_name = {instance_id}]'>>awslogs.conf\n",
+                "sudo echo '[datetime_format = %b %d %H:%M:%S]'>>awslogs.conf\n",
+                "sudo echo '[file = /var/log/syslog]'>>awslogs.conf\n",
+                "sudo echo '[initial_position = start_of_file]'>>awslogs.conf\n",
+                "sudo echo '[buffer_duration = 5000]'>>awslogs.conf\n",
+                "sudo apt-get install python -y\n",
+                "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
+                "chmod +x ./awslogs-agent-setup.py\n",
+                "sudo python ./awslogs-agent-setup.py -n -r us-east-1 -c /home/ubuntu/awslogs.conf\n",
+                "cd /etc/systemd/system\n",
+                "sudo touch awslogs.service\n",
+                "sudo chmod 777 awslogs.service\n",
+                "sudo echo '[Unit]'>>awslogs.service\n",
+                "sudo echo 'Description=Service for CloudWatch Logs agent'>>awslogs.service\n",
+                "sudo echo 'After=rc-local.service'>>awslogs.service\n",
+                "sudo echo '[Service]'>>awslogs.service\n",
+                "sudo echo 'Type=simple'>>awslogs.service\n",
+                "sudo echo 'Restart=always'>>awslogs.service\n",
+                "sudo echo 'KillMode=process'>>awslogs.service\n",
+                "sudo echo 'TimeoutSec=infinity'>>awslogs.service\n",
+                "sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid'>>awslogs.service\n",
+                "sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &amp;'>>awslogs.service\n",
+                "sudo echo '[Install]'>>awslogs.service\n",
+                "sudo echo 'WantedBy=multi-user.target'>>awslogs.service\n",
+                "sudo systemctl start awslogs.service\n"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "EC2InstanceSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Sample EC2Instabce security group",
+        "GroupName": "csye6225-webapp1111",
+        "VpcId": {
+          "Ref": "ParamVpcID"
+        }
+      }
+    },
+    "RDSSG": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "Sample RDS security group",
+        "EC2VpcId": {
+          "Ref": "ParamVpcID"
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule1": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule3": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "FromPort": "443",
+        "ToPort": "443",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "EC2InstanceSGInboundRule4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "-1",
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "CidrIp": "0.0.0.0/0",
+        "GroupId": {
+          "Fn::GetAtt": [
+            "EC2InstanceSG",
+            "GroupId"
+          ]
+        }
+      }
+    }
+  },
+  "Parameters": {
+    "ParamVpcID": {
+      "Type": "String"
+    },
+    "ParamSubnetId1": {
+      "Type": "String"
+    }
+  }
+}

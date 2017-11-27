@@ -16,12 +16,10 @@ public class PasswordResetController {
 
 //publish to an SNS topic
         String msg = email;
-<<<<<<< HEAD
-        String topicArn="arn:aws:sns:us-east-1:631563744355:password_reset";
-=======
+
 
         String topicArn=snsClient.createTopic("password_reset").getTopicArn();
->>>>>>> a3213df597f34d799c47386e2af8f190c1353688
+
         PublishRequest publishRequest = new PublishRequest(topicArn, msg);
         PublishResult publishResult = snsClient.publish(publishRequest);
 

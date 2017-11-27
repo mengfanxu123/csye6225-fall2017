@@ -31,6 +31,9 @@ deploy:
   on:
     all_branches: true
 - provider: codedeploy
+  access_key_id: $access_key_id
+  secret_access_key: $secret_access_key
+  bucket: $bucket
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip
   application: csye6225-fall2017
@@ -39,4 +42,3 @@ deploy:
   wait-until-deployed: true
   on:
     all_branches: true
-

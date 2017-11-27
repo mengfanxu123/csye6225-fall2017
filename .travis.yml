@@ -22,24 +22,18 @@ before_deploy:
 - cd ..
 deploy:
 - provider: s3
-  access_key_id: AKIAISPYBWRY3NPC2SAA
-  secret_access_key:
-    secure: kGPYAI8Ta20P30SG+zNLomrXeHpASsvdROTBA8rPLaj/hNCA+EjtpoZZ4A4PTFGQ52Zitr3mOfpjznRp73wYHxddCpUXSW4ixh0sGE/GS8iHL5YPnD0v0bbY3JFocAqfOdhnaEz4Vn7RBOtV0vLH/P4wlN05rBkirbpUZJaXojiJVRrgonk7mo7bin8Q7ZeX4Gheh6qovIbz3K8pifjozINrpfTcARNcWm3fVxZ5hUhU1jl/SfPOzgHQF0C9oqwRlv+STFw0s32AdYXCJuD0EZg6mDfV6/JyjRuIoQWJ2/hlObc5fchZ90qnXbUe7fdahhxLC49n+OeVcu/uvBOHtVb83u0zZh/29siRdooI4W49QyCF8XPpYVugd6v6oUZeKPZv6MBQE0ON0RdVuBiE6+W9riMffvIOvA6meHkeDdKwu1gDhAF83eSpRIrz3wOpCBcX+zu0WG1NYPOB9G0E7HXir2BrS6GWTXrKKMB7EFoiN3L2Na0qrnmy/gegwpA5PCql54FbmunyENAkl92r8bnwV1AsbTjELex1X30R01CslYoe3rwg90YQZ4dupc90bcLUgOLs6FLr/TxadD4FfFsEkBH7veV9L9rtQ2XOsxo/8rmGFZGnUY2145GKhbr+nZjViNm4kP7g6MkF2sY9TTS6CQ5uYGH9VBCY+ANCPo8=
-  local_dir: codedeploy
-  bucket: code-deploy.csye6225-fall2017-zhangmengf.me
-  region: us-east-1
   access_key_id: $access_key_id
   secret_access_key: $secret_access_key
   local_dir: codedeploy
   bucket: $bucket
+  region: us-east-1
   skip_cleanup: true
   on:
     all_branches: true
 - provider: codedeploy
-  access_key_id: AKIAISPYBWRY3NPC2SAA
-  secret_access_key:
-    secure: kGPYAI8Ta20P30SG+zNLomrXeHpASsvdROTBA8rPLaj/hNCA+EjtpoZZ4A4PTFGQ52Zitr3mOfpjznRp73wYHxddCpUXSW4ixh0sGE/GS8iHL5YPnD0v0bbY3JFocAqfOdhnaEz4Vn7RBOtV0vLH/P4wlN05rBkirbpUZJaXojiJVRrgonk7mo7bin8Q7ZeX4Gheh6qovIbz3K8pifjozINrpfTcARNcWm3fVxZ5hUhU1jl/SfPOzgHQF0C9oqwRlv+STFw0s32AdYXCJuD0EZg6mDfV6/JyjRuIoQWJ2/hlObc5fchZ90qnXbUe7fdahhxLC49n+OeVcu/uvBOHtVb83u0zZh/29siRdooI4W49QyCF8XPpYVugd6v6oUZeKPZv6MBQE0ON0RdVuBiE6+W9riMffvIOvA6meHkeDdKwu1gDhAF83eSpRIrz3wOpCBcX+zu0WG1NYPOB9G0E7HXir2BrS6GWTXrKKMB7EFoiN3L2Na0qrnmy/gegwpA5PCql54FbmunyENAkl92r8bnwV1AsbTjELex1X30R01CslYoe3rwg90YQZ4dupc90bcLUgOLs6FLr/TxadD4FfFsEkBH7veV9L9rtQ2XOsxo/8rmGFZGnUY2145GKhbr+nZjViNm4kP7g6MkF2sY9TTS6CQ5uYGH9VBCY+ANCPo8=
-  bucket: code-deploy.csye6225-fall2017-zhangmengf.me
+  access_key_id: $access_key_id
+  secret_access_key: $secret_access_key
+  bucket: $bucket
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
   bundle_type: zip
   application: csye6225-fall2017

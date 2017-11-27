@@ -11,5 +11,5 @@ echo $SUBNET_ID1&&
 echo "Enter The Stack Name:"
 read stackname
 
-aws cloudformation create-stack --stack-name ${stackname} --template-body file://./assignment8.json --parameters ParameterKey=ParamVpcID,ParameterValue=${VPC_ID} ParameterKey=ParamSubnetId1,ParameterValue=${SUBNET_ID1}&&
+aws cloudformation create-stack --stack-name ${stackname} --template-body file://./assignment9.json --parameters ParameterKey=ParamVpcID,ParameterValue=${VPC_ID} ParameterKey=ParamSubnetId1,ParameterValue=${SUBNET_ID1}&&
 echo done

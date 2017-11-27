@@ -73,17 +73,28 @@
                 "sudo rm -r ROOT\n",
                 "sudo apt-get update\n",
                 "cd /home/ubuntu\n",
+                "sudo touch /var/log/applog.log\n",
+                "sudo chmod 777 /var/log/applog.log\n",
+                "sudo touch /var/log/apptestlog\n",
+                "sudo chmod 777 /var/log/apptestlog\n",
                 "sudo touch awslogs.conf\n",
                 "sudo chmod 777 awslogs.conf\n",
                 "sudo echo '[general]'>>awslogs.conf\n",
-                "sudo echo '[state_file = /var/awslogs/state/agent-state]'>>awslogs.conf\n",
-                "sudo echo '[[/var/log/syslog]]'>>awslogs.conf\n",
-                "sudo echo '[log_group_name = /var/log/syslog]'>>awslogs.conf\n",
-                "sudo echo '[log_stream_name = {instance_id}]'>>awslogs.conf\n",
-                "sudo echo '[datetime_format = %b %d %H:%M:%S]'>>awslogs.conf\n",
-                "sudo echo '[file = /var/log/syslog]'>>awslogs.conf\n",
-                "sudo echo '[initial_position = start_of_file]'>>awslogs.conf\n",
-                "sudo echo '[buffer_duration = 5000]'>>awslogs.conf\n",
+                "sudo echo 'state_file = /var/awslogs/state/agent-state'>>awslogs.conf\n",
+                "sudo echo '[/var/log/applog.log]'>>awslogs.conf\n",
+                "sudo echo 'log_group_name = /var/log/applog.log'>>awslogs.conf\n",
+                "sudo echo 'log_stream_name = {instance_id}'>>awslogs.conf\n",
+                "sudo echo 'datetime_format = %b %d %H:%M:%S'>>awslogs.conf\n",
+                "sudo echo 'file = /var/log/applog.log'>>awslogs.conf\n",
+                "sudo echo 'initial_position = start_of_file'>>awslogs.conf\n",
+                "sudo echo 'buffer_duration = 5000'>>awslogs.conf\n",
+                "sudo echo '[/var/log/apptestlog]'>>awslogs.conf\n",
+                "sudo echo 'log_group_name = /var/log/apptestlog'>>awslogs.conf\n",
+                "sudo echo 'log_stream_name = {instance_id}'>>awslogs.conf\n",
+                "sudo echo 'datetime_format = %b %d %H:%M:%S'>>awslogs.conf\n",
+                "sudo echo 'file = /var/log/apptestlog'>>awslogs.conf\n",
+                "sudo echo 'initial_position = start_of_file'>>awslogs.conf\n",
+                "sudo echo 'buffer_duration = 5000'>>awslogs.conf\n",
                 "sudo apt-get install python -y\n",
                 "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
                 "chmod +x ./awslogs-agent-setup.py\n",
@@ -418,6 +429,29 @@
         }
       }
     },
+    "CloudWatchPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "CloudWatch-Policy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+              ],
+              "Resource": [
+                "arn:aws:logs:*:*:*"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "LambdaSnsExecutionRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -428,7 +462,7 @@
               "Effect": "Allow",
               "Principal": {
                 "Service": [
-                  "ec2.amazonaws.com"
+                  "lambda.amazonaws.com"
                 ]
               },
               "Action": [

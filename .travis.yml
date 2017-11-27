@@ -35,7 +35,7 @@ deploy:
   region: us-east-1
   skip_cleanup: true
   on:
-    branch: assignment9
+    all_branches: true
 - provider: codedeploy
 
   key: csye6225-fall2017-${TRAVIS_JOB_NUMBER}.zip
@@ -45,4 +45,4 @@ deploy:
   region: us-east-1
   wait-until-deployed: true
   on:
-    branch: assignment9
+    all_branches: true

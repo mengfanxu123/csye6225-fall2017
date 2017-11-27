@@ -25,9 +25,6 @@
             "Value": "CSYE6225"
           }
         ],
-        "IamInstanceProfile" :{
-          "Ref":"EC2InstanceProfile"
-        },
         "UserData": {
           "Fn::Base64": {
             "Fn::Join": [
@@ -56,21 +53,56 @@
                 "sudo touch setenv.sh\n",
                 "sudo chmod 777 setenv.sh\n",
                 "sudo echo '#!/bin/sh'>>setenv.sh\n",
-                {
-                  "Fn::Join":["",[
-                    "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://",
-                    {"Fn::GetAtt":[
-                      "DBInstance","Endpoint.Address"]},
-                    ":3306/csye6225\"'>>setenv.sh\n"
-                  ]]
-                },
+                "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://csye6225-fall2017.clbhwkx4b363.us-east-1.rds.amazonaws.com:3306/csye6225\"'>>setenv.sh\n",
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=csye6225master\"'>>setenv.sh\n",
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=csye6225password\"'>>setenv.sh\n",
                 "sudo chmod +x setenv.sh\n",
                 "sudo chown tomcat8:tomcat8 setenv.sh\n",
                 "cd /home/ubuntu\n",
                 "cd /var/lib/tomcat8/webapps\n",
-                "sudo rm -r ROOT\n"
+                "sudo rm -r ROOT\n",
+                "sudo apt-get update\n",
+                "cd /home/ubuntu\n",
+                "sudo touch /var/log/applog.log\n",
+                "sudo touch /var/log/apptestlog\n",
+                "sudo touch awslogs.conf\n",
+                "sudo chmod 777 awslogs.conf\n",
+                "sudo echo '[general]'>>awslogs.conf\n",
+                "sudo echo 'state_file = /var/awslogs/state/agent-state'>>awslogs.conf\n",
+                "sudo echo '[/var/log/applog.log]'>>awslogs.conf\n",
+                "sudo echo 'log_group_name = /var/log/applog.log'>>awslogs.conf\n",
+                "sudo echo 'log_stream_name = {instance_id}'>>awslogs.conf\n",
+                "sudo echo 'datetime_format = %b %d %H:%M:%S'>>awslogs.conf\n",
+                "sudo echo 'file = /var/log/applog.log'>>awslogs.conf\n",
+                "sudo echo 'initial_position = start_of_file'>>awslogs.conf\n",
+                "sudo echo 'buffer_duration = 5000'>>awslogs.conf\n",
+                "sudo echo '[/var/log/apptestlog]'>>awslogs.conf\n",
+                "sudo echo 'log_group_name = /var/log/apptestlog'>>awslogs.conf\n",
+                "sudo echo 'log_stream_name = {instance_id}'>>awslogs.conf\n",
+                "sudo echo 'datetime_format = %b %d %H:%M:%S'>>awslogs.conf\n",
+                "sudo echo 'file = /var/log/apptestlog'>>awslogs.conf\n",
+                "sudo echo 'initial_position = start_of_file'>>awslogs.conf\n",
+                "sudo echo 'buffer_duration = 5000'>>awslogs.conf\n",
+                "sudo apt-get install python -y\n",
+                "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
+                "chmod +x ./awslogs-agent-setup.py\n",
+                "sudo python ./awslogs-agent-setup.py -n -r us-east-1 -c /home/ubuntu/awslogs.conf\n",
+                "cd /etc/systemd/system\n",
+                "sudo touch awslogs.service\n",
+                "sudo chmod 777 awslogs.service\n",
+                "sudo echo '[Unit]'>>awslogs.service\n",
+                "sudo echo 'Description=Service for CloudWatch Logs agent'>>awslogs.service\n",
+                "sudo echo 'After=rc-local.service'>>awslogs.service\n",
+                "sudo echo '[Service]'>>awslogs.service\n",
+                "sudo echo 'Type=simple'>>awslogs.service\n",
+                "sudo echo 'Restart=always'>>awslogs.service\n",
+                "sudo echo 'KillMode=process'>>awslogs.service\n",
+                "sudo echo 'TimeoutSec=infinity'>>awslogs.service\n",
+                "sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid'>>awslogs.service\n",
+                "sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &amp;'>>awslogs.service\n",
+                "sudo echo '[Install]'>>awslogs.service\n",
+                "sudo echo 'WantedBy=multi-user.target'>>awslogs.service\n",
+                "sudo systemctl start awslogs.service\n"
               ]
             ]
           }
@@ -81,17 +113,8 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Sample EC2Instabce security group",
-        "GroupName": "csye6225-webapp",
+        "GroupName": "csye6225-webapp111",
         "VpcId": {
-          "Ref": "ParamVpcID"
-        }
-      }
-    },
-    "RDSSG": {
-      "Type": "AWS::RDS::DBSecurityGroup",
-      "Properties": {
-        "GroupDescription": "Sample RDS security group",
-        "EC2VpcId": {
           "Ref": "ParamVpcID"
         }
       }
@@ -155,303 +178,6 @@
           ]
         }
       }
-    },
-    "RDSSGInboundRule1": {
-      "Type": "AWS::RDS::DBSecurityGroupIngress",
-      "Properties": {
-        "DBSecurityGroupName": {
-          "Ref": "RDSSG"
-        },
-        "EC2SecurityGroupId": {
-          "Fn::GetAtt": [
-            "EC2InstanceSG",
-            "GroupId"
-          ]
-        }
-      }
-    },
-    "DynamoDB": {
-      "Type": "AWS::DynamoDB::Table",
-      "Properties": {
-        "AttributeDefinitions": [
-          {
-            "AttributeName": "id",
-            "AttributeType": "S"
-          }
-        ],
-        "KeySchema": [
-          {
-            "AttributeName": "id",
-            "KeyType": "HASH"
-          }
-        ],
-        "ProvisionedThroughput": {
-          "ReadCapacityUnits": "5",
-          "WriteCapacityUnits": "5"
-        },
-        "TableName": "csye6225"
-      }
-    },
-    "myDBSubnetGroup": {
-      "Type": "AWS::RDS::DBSubnetGroup",
-      "Properties": {
-        "DBSubnetGroupDescription": "description",
-        "SubnetIds": [
-          {
-            "Ref": "ParamSubnetId1"
-          },
-          {
-            "Ref": "ParamSubnetId2"
-          },
-          {
-            "Ref": "ParamSubnetId3"
-          },
-          {
-            "Ref": "ParamSubnetId4"
-          }
-        ]
-      }
-    },
-    "DBInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Properties": {
-        "Engine": "MySql",
-        "EngineVersion": "5.6.35",
-        "DBInstanceClass": "db.t2.medium",
-        "MultiAZ": "false",
-        "StorageType": "standard",
-        "AllocatedStorage": "10",
-        "DBInstanceIdentifier": "csye6225-fall2017",
-        "MasterUsername": "csye6225master",
-        "MasterUserPassword": "csye6225password",
-        "DBSubnetGroupName": {
-          "Ref": "myDBSubnetGroup"
-        },
-        "DBSecurityGroups": [
-          {
-            "Ref": "RDSSG"
-          }
-        ],
-        "PubliclyAccessible": "false",
-        "DBName": "csye6225"
-      }
-    },
-    "CodeDeployEC2ServiceRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [{
-            "Effect": "Allow",
-            "Principal": {
-              "Service": ["ec2.amazonaws.com"]
-            },
-            "Action": ["sts:AssumeRole"]
-          }]
-        },
-        "Path": "/",
-        "ManagedPolicyArns":["arn:aws:iam::aws:policy/AmazonS3FullAccess","arn:aws:iam::aws:policy/AdministratorAccess"],
-        "RoleName": "CodeDeployEC2ServiceRole"
-      }
-    },
-    "CodeDeployEC2S3": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "CodeDeploy-EC2-S3",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Action": [
-                "s3:Get*",
-                "s3:List*"
-              ],
-              "Effect": "Allow",
-              "Resource": "*"
-            }
-          ]
-        },
-        "Roles": [
-          {
-            "Ref": "CodeDeployEC2ServiceRole"
-          }
-        ]
-      }
-    },
-    "EC2InstanceProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Path": "/",
-        "Roles": [
-          {
-            "Ref": "CodeDeployEC2ServiceRole"
-          }
-        ]
-      }
-    },
-    "CodeDeployServiceRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version" : "2012-10-17",
-          "Statement": [ {
-            "Effect": "Allow",
-            "Principal": {
-              "Service": [ "codedeploy.amazonaws.com" ]
-            },
-            "Action": [ "sts:AssumeRole" ]
-          } ]
-        },
-        "Path": "/",
-        "ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"],
-        "RoleName":"CodeDeployServiceRole"
-      }
-    },
-    "CodeDeployProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Path": "/",
-        "Roles": [ {
-          "Ref": "CodeDeployServiceRole"
-        } ]
-      }
-    },
-
-    "TravisUploadToS3": {
-      "Type": "AWS::IAM::ManagedPolicy",
-      "Properties": {
-        "ManagedPolicyName": "Travis-Upload-To-S3",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "s3:PutObject"
-              ],
-              "Resource": [
-                "*"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "TravisCodeDeploy": {
-      "Type": "AWS::IAM::ManagedPolicy",
-      "Properties": {
-        "ManagedPolicyName": "Travis-Code-Deploy",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "codedeploy:RegisterApplicationRevision",
-                "codedeploy:GetApplicationRevision"
-              ],
-              "Resource": {"Fn::Join":
-              ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":application:csye6225-fall2017"
-              ]]}
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "codedeploy:CreateDeployment",
-                "codedeploy:GetDeployment"
-              ],
-              "Resource": [
-                "*"
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "codedeploy:GetDeploymentConfig"
-              ],
-              "Resource": [
-                {"Fn::Join":
-                ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":deploymentconfig:CodeDeployDefault.OneAtATime"
-                ]]},
-                {"Fn::Join":
-                ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":deploymentconfig:CodeDeployDefault.HalfAtATime"
-                ]]},
-                {"Fn::Join":
-                ["", ["arn:aws:codedeploy:us-east-1:",{"Ref":"AWS::AccountId"},":CodeDeployDefault.AllAtOnce"
-                ]]}
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "CloudWatchPolicy": {
-      "Type": "AWS::IAM::ManagedPolicy",
-      "Properties": {
-        "ManagedPolicyName": "CloudWatch-Policy",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-                "logs:DescribeLogStreams"
-              ],
-              "Resource": [
-                "arn:aws:logs:*:*:*"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "LambdaSnsExecutionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "ec2.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Path": "/",
-        "ManagedPolicyArns": [
-          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-          "arn:aws:iam::aws:policy/AmazonSESFullAccess"
-        ],
-        "RoleName": "lambda-sns-execution-role"
-      }
-    },
-    "LambdaSnsExecutionProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Path": "/",
-        "Roles": [
-          {
-            "Ref": "LambdaSnsExecutionRole"
-          }
-        ]
-      }
-    },
-    "SNSTopic":{
-      "Type":"AWS::SNS::Topic",
-      "Properties":{
-        "TopicName":"password_reset11"
-      }
     }
   },
   "Parameters": {
@@ -459,15 +185,6 @@
       "Type": "String"
     },
     "ParamSubnetId1": {
-      "Type": "String"
-    },
-    "ParamSubnetId2": {
-      "Type": "String"
-    },
-    "ParamSubnetId3": {
-      "Type": "String"
-    },
-    "ParamSubnetId4": {
       "Type": "String"
     }
   }

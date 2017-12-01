@@ -462,7 +462,7 @@
               "Effect": "Allow",
               "Principal": {
                 "Service": [
-                  "ec2.amazonaws.com"
+                  "lambda.amazonaws.com"
                 ]
               },
               "Action": [

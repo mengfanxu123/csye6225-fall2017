@@ -6,6 +6,16 @@ files:
     destination: /home/ubuntu
   - source: ./restartTomcat.sh
     destination: /home/ubuntu
+  - source: ./test.key
+    destination: /home/ubuntu
+  - source: ./test.csr
+    destination: /home/ubuntu
+  - source: ./csye6225-fall2017-xushua_me.ca-bundle
+    destination: /home/ubuntu
+  - source: ./csye6225-fall2017-xushua_me.crt
+    destination: /home/ubuntu
+  - source: ./csye6225-fall2017-xushua_me.p7b
+    destination: /home/ubuntu
   - source: ./build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
     

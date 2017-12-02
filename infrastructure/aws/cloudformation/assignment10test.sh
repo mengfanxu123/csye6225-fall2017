@@ -17,5 +17,5 @@ SUBNET_ID4=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=$VPC_ID" --
 echo $SUBNET_ID4&&
 
 
-aws cloudformation create-stack --stack-name test --template-body file://./assignmnet10.json --parameters ParameterKey=ParamVpcID,ParameterValue=${VPC_ID} ParameterKey=ParamSubnetId1,ParameterValue=${SUBNET_ID1} ParameterKey=ParamSubnetId2,ParameterValue=${SUBNET_ID2} ParameterKey=ParamSubnetId3,ParameterValue=${SUBNET_ID3} ParameterKey=ParamSubnetId4,ParameterValue=${SUBNET_ID4} --capabilities CAPABILITY_NAMED_IAM&&
+aws cloudformation create-stack --stack-name test --template-body file://./assignment10.json --parameters ParameterKey=ParamVpcID,ParameterValue=${VPC_ID} ParameterKey=ParamSubnetId1,ParameterValue=${SUBNET_ID1} ParameterKey=ParamSubnetId2,ParameterValue=${SUBNET_ID2} ParameterKey=ParamSubnetId3,ParameterValue=${SUBNET_ID3} ParameterKey=ParamSubnetId4,ParameterValue=${SUBNET_ID4} --capabilities CAPABILITY_NAMED_IAM&&
 echo done

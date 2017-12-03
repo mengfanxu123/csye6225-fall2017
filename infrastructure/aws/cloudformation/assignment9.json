@@ -8,7 +8,7 @@
         "ImageId": "ami-cd0f5cb6",
         "InstanceType": "t2.micro",
         "KeyName": "MyKeyPair",
-        "SecurityGroups":[{"Ref":"EC2InstanceSG"}],
+        "Securi tyGroups":[{"Ref":"EC2InstanceSG"}],
         "IamInstanceProfile":{
           "Ref":"EC2InstanceProfile"
         },
@@ -515,7 +515,7 @@
     "loadBalancer":{
       "Type":"AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties":{
-        "Scheme":"internal-facing",
+        "Scheme":"internet-facing",
         "Subnets":[
           {
             "Ref": "ParamSubnetId1"

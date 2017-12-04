@@ -39,4 +39,3 @@ deploy:
   wait-until-deployed: true
   on:
     all_branches: true
-

@@ -8,7 +8,7 @@
         "ImageId": "ami-cd0f5cb6",
         "InstanceType": "t2.micro",
         "KeyName": "MyKeyPair",
-        "Securi tyGroups":[{"Ref":"EC2InstanceSG"}],
+        "SecurityGroups":[{"Ref":"EC2InstanceSG"}],
         "IamInstanceProfile":{
           "Ref":"EC2InstanceProfile"
         },
@@ -111,8 +111,8 @@
         "LaunchConfigurationName":{
           "Ref": "LaunchConfigInstance"
         },
-        "MaxSize":"1",
-        "MinSize":"1",
+        "MaxSize":"3",
+        "MinSize":"3",
         "Tags": [
           {
             "Key": "NAME",
@@ -539,6 +539,24 @@
             "Value": "FALL2017"
           }
         ]
+      }
+    },
+    "HttpTargetGroup":{
+      "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties":{
+        "Name":"httptest",
+        "Port":"8080",
+        "Protocol":"HTTP",
+        "VpcId":{"Ref":"ParamVpcID"}
+      }
+    },
+    "HttpsTargetGroup":{
+      "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties":{
+        "Name":"httpstest",
+        "Port":"8443",
+        "Protocol":"HTTPS",
+        "VpcId":{"Ref":"ParamVpcID"}
       }
     }
   },

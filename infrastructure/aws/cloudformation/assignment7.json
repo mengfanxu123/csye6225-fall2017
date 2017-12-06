@@ -2,63 +2,26 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Sample CloudFormation Template for CSYE 6225 - Fall 2017",
     "Resources": {
-     
-         "EC2Instance": {
-            "Type": "AWS::EC2::Instance",
-            "Properties": {
-                "ImageId": "ami-cd0f5cb6",
-                "InstanceType": "t2.micro",
-                "SecurityGroupIds": [
-                    {
-                        "Fn::GetAtt": ["EC2InstanceSG","GroupId"]
-                    }
-                ],
-                "KeyName": "MyKeyPair",
-                "SubnetId":{"Ref":"ParamSubnetId1"},
-                "Tags":[{"Key":"NAME","Value":"CSYE6225"}],
-                "UserData":{
-                  "Fn::Base64":{
-                    "Fn::Join":["",[
-                      "#!/bin/bash -v\n",
-                      "sudo apt-get update\n",
-                      "sudo apt-get -y install default-jre\n",
-                      "sudo chmod 777 /etc/environment\n",
-                      "echo \"JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\" >> /etc/environment\n",
-                      "source /etc/environment\n",
-                      "echo $JAVA_HOME\n",
-                      "sudo apt-get -y install tomcat8\n",
-                      "sudo service tomcat8 start\n",
-                      "sudo service tomcat8 status\n",
-                      "sudo apt-get update\n",
-                      "sudo apt-get -y install ruby\n",
-                      "sudo apt-get -y install wget\n",
-                      "cd /home/ubuntu\n",
-                      "wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install\n",
-                      "chmod +x ./install\n",
-                      "sudo ./install auto\n",
-                      "sudo service codedeploy-agent start\n",
-                      "sudo service codedeploy-agent status\n"
-                ]]}}
-            }
-        },    
-        "EC2InstanceSG": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-            "GroupDescription": "Sample EC2Instabce security group",
-            "GroupName":"csye6225-webapptest",
-            "VpcId":{"Ref":"ParamVpcID"}
-                          }
-                         },
-        
-       "EC2InstanceSGInboundRule1": {
-           "Type": "AWS::EC2::SecurityGroupIngress",
-           "Properties":{
-           "IpProtocol": "tcp",
-           "FromPort": "22",
-           "ToPort": "22",
-           "CidrIp": "0.0.0.0/0",
-           "GroupId": {"Fn::GetAtt": ["EC2InstanceSG", "GroupId"]}      
+
+      "HttpTargetGroup":{
+        "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
+        "Properties":{
+          "Name":"httptest",
+          "Port":"8080",
+          "Protocol":"HTTP",
+          "VpcId":{"Ref":"ParamVpcID"}
+        }
+      },
+      "HttpsTargetGroup":{
+        "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
+        "Properties":{
+          "Name":"httpstest",
+          "Port":"8443",
+          "Protocol":"HTTPS",
+          "VpcId":{"Ref":"ParamVpcID"}
+        }
       }
+
     },
        "EC2InstanceSGInboundRule2": {
            "Type": "AWS::EC2::SecurityGroupIngress",
@@ -215,10 +178,6 @@
     "Parameters" : {
           "ParamVpcID" : {
             "Type" : "String"
-       },
-          "ParamSubnetId1" : {
-            "Type" : "String"
        }
-          
     }
 }

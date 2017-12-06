@@ -14,7 +14,7 @@ public class PasswordResetController {
     public  void resetPassword(@RequestBody String email){
         AmazonSNSClient snsClient = new AmazonSNSClient(new ClientConfiguration());
 
-//publish to an SNS topic
+//publish to an SNS topicc
         String msg = email;
 
 

@@ -9,7 +9,7 @@
         "InstanceType": "t2.micro",
         "KeyName": "MyKeyPair",
         "SecurityGroups":[{"Ref":"EC2InstanceSG"}],
-        "IamInstanceProfile":{
+        "IamInstanceProfile" :{
           "Ref":"EC2InstanceProfile"
         },
         "UserData": {
@@ -40,14 +40,6 @@
                 "sudo touch setenv.sh\n",
                 "sudo chmod 777 setenv.sh\n",
                 "sudo echo '#!/bin/sh'>>setenv.sh\n",
-                {
-                  "Fn::Join":["",[
-                    "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://",
-                    {"Fn::GetAtt":[
-                      "DBInstance","Endpoint.Address"]},
-                    ":3306/csye6225\"'>>setenv.sh\n"
-                  ]]
-                },
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=csye6225master\"'>>setenv.sh\n",
                 "sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=csye6225password\"'>>setenv.sh\n",
                 "sudo chmod +x setenv.sh\n",
@@ -146,15 +138,6 @@
         }
       }
     },
-    "RDSSG": {
-      "Type": "AWS::RDS::DBSecurityGroup",
-      "Properties": {
-        "GroupDescription": "Sample RDS security group",
-        "EC2VpcId": {
-          "Ref": "ParamVpcID"
-        }
-      }
-    },
     "EC2InstanceSGInboundRule1": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -215,20 +198,35 @@
         }
       }
     },
-    "RDSSGInboundRule1": {
-      "Type": "AWS::RDS::DBSecurityGroupIngress",
-      "Properties": {
-        "DBSecurityGroupName": {
-          "Ref": "RDSSG"
-        },
-        "EC2SecurityGroupId": {
-          "Fn::GetAtt": [
-            "EC2InstanceSG",
-            "GroupId"
-          ]
-        }
+    "loadBalancer":{
+      "Type":"AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties":{
+        "Scheme":"internal",
+        "Subnets":[
+          {
+            "Ref": "ParamSubnetId1"
+          },
+          {
+            "Ref": "ParamSubnetId2"
+          },
+          {
+            "Ref": "ParamSubnetId3"
+          },
+          {
+            "Ref": "ParamSubnetId4"
+          }
+        ],
+        "SecurityGroups":[
+          {"Ref":"EC2InstanceSG"}
+        ],
+        "Tags": [
+          {
+            "Key": "CSYE6225",
+            "Value": "FALL2017"
+          }
+        ]
       }
-    },
+  },
     "DynamoDB": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
@@ -249,50 +247,6 @@
           "WriteCapacityUnits": "5"
         },
         "TableName": "csye6225"
-      }
-    },
-    "myDBSubnetGroup": {
-      "Type": "AWS::RDS::DBSubnetGroup",
-      "Properties": {
-        "DBSubnetGroupDescription": "description",
-        "SubnetIds": [
-          {
-            "Ref": "ParamSubnetId1"
-          },
-          {
-            "Ref": "ParamSubnetId2"
-          },
-          {
-            "Ref": "ParamSubnetId3"
-          },
-          {
-            "Ref": "ParamSubnetId4"
-          }
-        ]
-      }
-    },
-    "DBInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Properties": {
-        "Engine": "MySql",
-        "EngineVersion": "5.6.35",
-        "DBInstanceClass": "db.t2.medium",
-        "MultiAZ": "false",
-        "StorageType": "standard",
-        "AllocatedStorage": "10",
-        "DBInstanceIdentifier": "csye6225-fall2017",
-        "MasterUsername": "csye6225master",
-        "MasterUserPassword": "csye6225password",
-        "DBSubnetGroupName": {
-          "Ref": "myDBSubnetGroup"
-        },
-        "DBSecurityGroups": [
-          {
-            "Ref": "RDSSG"
-          }
-        ],
-        "PubliclyAccessible": "false",
-        "DBName": "csye6225"
       }
     },
     "CodeDeployEC2ServiceRole": {
@@ -375,7 +329,6 @@
         } ]
       }
     },
-
     "TravisUploadToS3": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
@@ -443,123 +396,8 @@
           ]
         }
       }
-    },
-    "CloudWatchPolicy": {
-      "Type": "AWS::IAM::ManagedPolicy",
-      "Properties": {
-        "ManagedPolicyName": "CloudWatch-Policy",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-                "logs:DescribeLogStreams"
-              ],
-              "Resource": [
-                "arn:aws:logs:*:*:*"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "LambdaSnsExecutionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Path": "/",
-        "ManagedPolicyArns": [
-          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-          "arn:aws:iam::aws:policy/AmazonSESFullAccess"
-        ],
-        "RoleName": "lambda-sns-execution-role"
-      }
-    },
-    "LambdaSnsExecutionProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Path": "/",
-        "Roles": [
-          {
-            "Ref": "LambdaSnsExecutionRole"
-          }
-        ]
-      }
-    },
-    "SNSTopic":{
-      "Type":"AWS::SNS::Topic",
-      "Properties":{
-        "TopicName":"password_reset"
-      }
-    },
-    "loadBalancer":{
-      "Type":"AWS::ElasticLoadBalancingV2::LoadBalancer",
-      "Properties":{
-        "Scheme":"internet-facing",
-        "Subnets":[
-          {
-            "Ref": "ParamSubnetId1"
-          },
-          {
-            "Ref": "ParamSubnetId2"
-          },
-          {
-            "Ref": "ParamSubnetId3"
-          },
-          {
-            "Ref": "ParamSubnetId4"
-          }
-        ],
-        "SecurityGroups":[
-          {"Ref":"EC2InstanceSG"}
-        ],
-        "Tags": [
-          {
-            "Key": "CSYE6225",
-            "Value": "FALL2017"
-          }
-        ]
-      }
-    },
-    "HttpTargetGroup":{
-      "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
-      "Properties":{
-        "Name":"httptest",
-        "Port":"8080",
-        "Protocol":"HTTP",
-        "VpcId":{"Ref":"ParamVpcID"}
-      }
-    },
-    "HttpsTargetGroup":{
-      "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
-      "Properties":{
-        "Name":"httpstest",
-        "Port":"8443",
-        "Protocol":"HTTPS",
-        "VpcId":{"Ref":"ParamVpcID"}
-      }
     }
-  },
+    },
   "Parameters": {
     "ParamVpcID": {
       "Type": "String"

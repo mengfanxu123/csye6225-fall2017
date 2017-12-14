@@ -564,15 +564,6 @@
         "Protocol":"HTTP",
         "VpcId":{"Ref":"ParamVpcID"}
       }
-    },
-    "HttpsTargetGroup":{
-      "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
-      "Properties":{
-        "Name":"httpstest",
-        "Port":"8443",
-        "Protocol":"HTTPS",
-        "VpcId":{"Ref":"ParamVpcID"}
-      }
     }
   },
   "Parameters": {

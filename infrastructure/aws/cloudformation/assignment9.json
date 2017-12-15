@@ -53,8 +53,6 @@
                 "sudo chmod +x setenv.sh\n",
                 "sudo chown tomcat8:tomcat8 setenv.sh\n",
                 "cd /home/ubuntu\n",
-                "cd /var/lib/tomcat8/webapps\n",
-                "sudo rm -r ROOT\n",
                 "sudo apt-get update\n",
                 "cd /home/ubuntu\n",
                 "sudo touch /var/log/applog.log\n",
@@ -562,15 +560,6 @@
         "Name":"httptest",
         "Port":"8080",
         "Protocol":"HTTP",
-        "VpcId":{"Ref":"ParamVpcID"}
-      }
-    },
-    "HttpsTargetGroup":{
-      "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
-      "Properties":{
-        "Name":"httpstest",
-        "Port":"8443",
-        "Protocol":"HTTPS",
         "VpcId":{"Ref":"ParamVpcID"}
       }
     }

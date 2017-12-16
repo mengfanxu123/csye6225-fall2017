@@ -1,0 +1,165 @@
+resources:
+- name: the-first-network
+  type: compute.v1.network
+  properties:
+    kind: compute#network
+    name: firstNetwork
+    selfLink: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/networks/firstNetwork
+- name: the-first-firewall-rule
+  type: compute.v1.firewall
+  properties:
+    kind: compute#firewall
+    name: firewallRule1
+    selfLink: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/firewalls/firewallRule1
+    network: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/networks/default
+    direction: INGRESS
+    priority: 1000
+    allowed:
+    - IPProtocol: tcp
+      ports:
+      - '8080'
+- name: the-second-firewall-rule
+  type: compute.v1.firewall
+  properties:
+    kind: compute#firewall
+    name: firewallRule2
+    selfLink: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/firewalls/firewallRule2
+    network: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/networks/default
+    direction: INGRESS
+    priority: 1000
+    allowed:
+    - IPProtocol: tcp
+      ports:
+      - '443'
+- name: the-third-firewall-rule
+  type: compute.v1.firewall
+  properties:
+    kind: compute#firewall
+    name: firewallRule3
+    selfLink: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/firewalls/firewallRule3
+    network: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/networks/default
+    direction: INGRESS
+    priority: 1000
+    allowed:
+    - IPProtocol: tcp
+      ports:
+      - '22'
+- name: the-first-instance
+  type: compute.v1.instance
+  properties:
+    kind: computer#instance
+    name: instance-1
+    zone: us-east1-b
+    minCpuPlatform: Automatic
+    machineType: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/zones/us-east1-b/machineTypes/n1-standard-1
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #!/bin/bash -v
+           sudo apt-get update
+           sudo apt-get -y install default-jre
+           sudo chmod 777 /etc/environment
+           echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> /etc/environment
+          source /etc/environment
+          echo $JAVA_HOME
+          sudo apt-get -y install tomcat8
+          sudo service tomcat8 start
+          sudo service tomcat8 status
+          sudo apt-get update
+          sudo apt-get -y install ruby
+          sudo apt-get -y install wget
+    tags:
+      items:
+      - http-server
+      - https-server
+    disks:
+    - type: PERSISTENT
+      boot: true
+      mode: READ_WRITE
+      autoDelete: true
+      deviceName: instance-1
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1604-xenial-v20171212
+        diskType: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/zones/us-east1-b/diskTypes/pd-standard
+        diskSizeGb: '10'
+    canIpForward: false
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/global/networks/default
+      subnetwork: https://www.googleapis.com/compute/v1/projects/csye6225-fall2017-111999/regions/us-east1/subnetworks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+      aliasIpRanges: []
+    description: ''
+    labels: {}
+    scheduling:
+      preemptible: false
+      onHostMaintenance: MIGRATE
+      automaticRestart: true
+    deletionProtection: false
+- name: the-first-s3
+  type: storage.v1.bucket
+  properties:
+    kind: storage#bucket
+    name: s3
+    versioning:
+      enable: false
+    storageClass: MULTI_REGIONAL
+- name: sns
+  type: pubsub.v1.topic
+  properties:
+    name: projects/csye6225-fall2017-111999/topics/sns
+    topic: password_reset
+- name: custom-role
+  type: gcp-types/iam-v1:projects.roles
+  properties:
+    parent: projects/csye6225-fall2017-111999
+    roleId: myRole
+    role:
+      title: myFirstRole
+      stage: ALPHA
+      includedPermissions:
+      - appengine.applications.get
+- name: noSQL
+  type: bigtableadmin.v2.instance
+  properties:
+    parent: projects/csye6225-fall2017-111999
+    instanceId: my19sql
+    instance:
+      displayName: MyNoSql
+      type: PRODUCTION
+    clusters:
+      test99999:
+        defaultStorageType: HDD
+        serveNodes: 4
+        location: projects/csye6225-fall2017-111999/locations/us-east1-b
+- name: sql1111
+  properties:
+    settings:
+      backupConfiguration:
+        binaryLogEnabled: true
+        enabled: true
+      tier: db-n1-standard-1
+  type: gcp-types/sqladmin-v1beta4:instances
+- name: database
+  properties:
+    charset: utf8
+    instance: $(ref.sql1111.name)
+    name: database
+  type: gcp-types/sqladmin-v1beta4:databases
+  metadata:
+    dependsOn:
+    - sql1111
+- metadata:
+    dependsOn:
+    - database
+    - sql1111
+  name: cccad-replica-0
+  properties:
+    masterInstanceName: $(ref.sql1111.name)
+    region: us-central1
+    settings:
+      replicationType: SYNCHRONOUS
+      tier: db-n1-standard-1
+  type: gcp-types/sqladmin-v1beta4:instances

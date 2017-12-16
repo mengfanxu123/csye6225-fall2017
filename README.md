@@ -81,4 +81,4 @@ login in Travis CI
 Team Leader: ShuangShuang Xu xu.shua@husky.neu.edu
 Team members: Mengfan Xu xu.mengf@husky.neu.edu
               Mengfei Zhang zhang.mengf@husky.neu.edu
-              YeHiu Rong rong.ye@husky.neu.edu
+              Yehui Rong rong.ye@husky.neu.edu
